@@ -12,101 +12,86 @@
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: 'Times New Roman', Times, Georgia, serif; background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
-  color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100vh; overflow-x: hidden; }
 
-.hero { text-align: center; padding: 50px 20px 10px; animation: heroIn 0.8s ease-out; }
-.hero h1 { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.02em; }
-.hero p { font-size: 1.05rem; color: var(--secondary); margin-top: 6px; }
-.hero .citation { font-size: 0.82rem; color: var(--tertiary); margin-top: 4px; font-style: italic; }
-@keyframes heroIn { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+.hero { text-align: center; padding: 20px 20px 4px; animation: heroIn 0.8s ease-out; }
+.hero h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.01em; }
+.hero p { font-size: 0.85rem; color: var(--secondary); margin-top: 2px; }
+.hero .citation { font-size: 0.7rem; color: var(--tertiary); margin-top: 2px; font-style: italic; }
+@keyframes heroIn { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
 
-.container { max-width: 1000px; margin: 0 auto; padding: 0 20px 40px; }
+.main-layout { max-width: 1050px; margin: 0 auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+
+/* === TOP ROW: Inputs + Result side by side === */
+.top-row { display: flex; gap: 12px; }
+.top-row .card { flex: 1; min-width: 0; }
+@media (max-width: 800px) { .top-row { flex-direction: column; } }
 
 .card { background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-radius: 20px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06);
-  box-shadow: 0 2px 24px rgba(0,0,0,0.04); }
-.card.anim-1 { animation: cardIn 0.6s ease-out 0.1s both; }
-.card.anim-2 { animation: cardIn 0.6s ease-out 0.2s both; }
-.card.anim-3 { animation: cardIn 0.6s ease-out 0.3s both; }
-@keyframes cardIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  border-radius: 16px; padding: 18px 20px; border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.04); }
 
-.card h2 { font-size: 1.3rem; font-weight: 600; color: var(--text); margin-bottom: 20px;
-  padding-bottom: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
-.card h2 .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.card h2 { font-size: 1.05rem; font-weight: 600; color: var(--text); margin-bottom: 12px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+.card h2 .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 .dot-blue { background: var(--blue); } .dot-green { background: var(--green); }
 
-.form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-@media (max-width: 720px) { .form-grid { grid-template-columns: 1fr; } }
+/* === Form fields === */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
 
 .field label { display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-.field label .val { font-size: 1.1rem; color: var(--blue); font-weight: 700; }
-.field label .unit { font-size: 0.78rem; color: var(--tertiary); font-weight: 400; }
+  font-size: 0.8rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.field label .val { font-size: 1rem; color: var(--blue); font-weight: 700; }
+.field label .unit { font-size: 0.7rem; color: var(--tertiary); font-weight: 400; }
 
-/* === FIXED: Segmented Control with JS-driven active state === */
-.segmented { display: flex; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.segmented .seg-btn { flex: 1; text-align: center; padding: 12px 0; cursor: pointer;
-  font-size: 0.95rem; font-weight: 500; color: var(--secondary); background: transparent;
+.segmented { display: flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.segmented .seg-btn { flex: 1; text-align: center; padding: 10px 0; cursor: pointer;
+  font-size: 0.85rem; font-weight: 500; color: var(--secondary); background: transparent;
   transition: all 0.2s; border: none; font-family: inherit;
   border-right: 1px solid var(--border); }
 .segmented .seg-btn:last-child { border-right: none; }
 .segmented .seg-btn:hover { background: rgba(0,113,227,0.04); }
 .segmented .seg-btn.active { background: var(--blue); color: #fff; font-weight: 600; }
 
-/* === Sliders === */
-input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px;
+input[type=range] { -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
   background: linear-gradient(90deg, var(--blue) var(--fill,0%), var(--border) var(--fill,0%)); outline: none; }
-input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px;
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px;
   border-radius: 50%; background: #fff; border: 2px solid var(--blue); cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,113,227,0.2); transition: transform 0.15s; }
-input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-.range-labels { display: flex; justify-content: space-between; font-size: 0.7rem;
-  color: var(--tertiary); margin-top: 2px; }
+  box-shadow: 0 2px 6px rgba(0,113,227,0.2); transition: transform 0.15s; }
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.range-labels { display: flex; justify-content: space-between; font-size: 0.65rem;
+  color: var(--tertiary); margin-top: 1px; }
 
-/* === Result === */
-.result-section { display: none; }
-.result-section.show { display: block; animation: resultPop 0.5s ease-out; }
-@keyframes resultPop { from { opacity:0; transform:scale(0.96); } to { opacity:1; transform:scale(1); } }
-
-.gauge-wrap { position: relative; width: 100%; margin: 16px 0 24px; }
-.gauge-bar { width: 100%; height: 22px; border-radius: 11px;
+/* === Result gauge === */
+.gauge-wrap { position: relative; width: 100%; margin: 8px 0 14px; }
+.gauge-bar { width: 100%; height: 16px; border-radius: 8px;
   background: linear-gradient(90deg, var(--green) 0%, var(--orange) 35%, var(--red) 70%, var(--black) 100%); }
-.gauge-marker { position: absolute; top: -6px; width: 6px; height: 34px; border-radius: 3px;
+.gauge-marker { position: absolute; top: -5px; width: 5px; height: 26px; border-radius: 2px;
   background: var(--black); transform: translateX(-50%); transition: left 0.6s cubic-bezier(0.25,0.1,0.25,1); }
-.gauge-labels { display: flex; justify-content: space-between; font-size: 0.75rem;
-  color: var(--secondary); margin-top: 8px; padding: 0 4px; }
+.gauge-labels { display: flex; justify-content: space-between; font-size: 0.65rem;
+  color: var(--secondary); margin-top: 4px; padding: 0 2px; }
 
 .risk-display { text-align: center; }
-.risk-value { font-size: 3.5rem; font-weight: 800; letter-spacing: -0.03em; transition: color 0.5s; }
-.risk-category { font-size: 1.1rem; font-weight: 600; margin-top: 2px; }
-.risk-detail { font-size: 0.85rem; color: var(--secondary); margin-top: 6px; }
+.risk-value { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.03em; transition: color 0.5s; line-height: 1; }
+.risk-category { font-size: 0.9rem; font-weight: 600; margin-top: 2px; }
+.risk-detail { font-size: 0.72rem; color: var(--secondary); margin-top: 2px; }
 
-.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
-@media (max-width: 600px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
-.stat-box { background: #FBFBFD; border-radius: 14px; padding: 14px 10px;
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+.stat-box { background: #FBFBFD; border-radius: 10px; padding: 10px 6px;
   text-align: center; border: 1px solid #F0F0F5; }
-.stat-box .num { font-size: 1.4rem; font-weight: 700; color: var(--text); }
-.stat-box .lbl { font-size: 0.7rem; color: var(--tertiary); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-box .num { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+.stat-box .lbl { font-size: 0.62rem; color: var(--tertiary); margin-top: 1px; text-transform: uppercase; letter-spacing: 0.04em; }
 
-.btn-row { text-align: center; margin-top: 16px; }
-.btn { display: inline-block; padding: 14px 48px; border-radius: 30px; font-size: 1.05rem;
-  font-weight: 600; cursor: pointer; border: none; font-family: inherit;
-  background: var(--blue); color: #fff; box-shadow: 0 4px 16px rgba(0,113,227,0.25);
-  transition: all 0.2s; }
-.btn:hover { box-shadow: 0 6px 24px rgba(0,113,227,0.35); transform: translateY(-1px); }
-.btn:active { transform: scale(0.97); }
-
-/* === FIXED: Nomogram canvas crisp on HiDPI === */
+/* === NOMOGRAM canvas === */
 .nomogram-wrap { width: 100%; }
-.nomogram-wrap canvas { display: block; width: 100%; height: auto; max-width: 900px; margin: 0 auto; }
+.nomogram-wrap canvas { display: block; width: 100%; height: auto; max-width: 1000px; margin: 0 auto; }
 
-.info-bar { background: rgba(0,113,227,0.05); border-radius: 14px; padding: 16px 20px;
-  font-size: 0.82rem; color: var(--secondary); margin-top: 20px; text-align: center;
-  border: 1px solid rgba(0,113,227,0.1); }
+.info-bar { background: rgba(0,113,227,0.05); border-radius: 10px; padding: 8px 16px;
+  font-size: 0.7rem; color: var(--secondary); text-align: center; border: 1px solid rgba(0,113,227,0.1); }
 
-footer { text-align: center; padding: 24px 20px 40px; font-size: 0.75rem;
+footer { text-align: center; padding: 8px 20px 16px; font-size: 0.68rem;
   color: var(--tertiary); max-width: 1000px; margin: 0 auto; }
-footer a { color: var(--blue); text-decoration: none; }
 </style>
 </head>
 <body>
@@ -114,310 +99,183 @@ footer a { color: var(--blue); text-decoration: none; }
 <div class="hero">
   <h1>NVAF-CES Outcome Prediction Nomogram</h1>
   <p>Non-valvular Atrial Fibrillation · Acute Cardioembolic Stroke · 14-Day Functional Outcome</p>
-  <p class="citation">Hu J, Wang L, Chen XY, He X, Wu JC. <em>Int J Cerebrovasc Dis</em> 2024; 32(10).<br>
-  C-statistic 0.820 · N = 196 · Bootstrap internal validation</p>
+  <p class="citation">Hu J et al. <em>Int J Cerebrovasc Dis</em> 2024; 32(10). C-statistic 0.820 · N = 196 · Bootstrap validation</p>
 </div>
 
-<div class="container">
+<div class="main-layout">
 
-  <!-- INPUT CARD -->
-  <div class="card anim-1">
-    <h2><span class="dot dot-blue"></span> Patient Parameters</h2>
-    <div class="form-grid">
-      <div class="field">
-        <label>Sex</label>
-        <div class="segmented" id="sexGroup">
-          <button class="seg-btn active" data-val="0" onclick="setSex(0,this)">Male</button>
-          <button class="seg-btn" data-val="1" onclick="setSex(1,this)">Female</button>
+  <!-- === TOP ROW: Inputs + Result side by side === -->
+  <div class="top-row">
+    <div class="card">
+      <h2><span class="dot dot-blue"></span> Patient Parameters</h2>
+      <div class="form-grid">
+        <div class="field">
+          <label>Sex</label>
+          <div class="segmented" id="sexGroup">
+            <button class="seg-btn active" data-val="0" onclick="setSex(0,this)">Male</button>
+            <button class="seg-btn" data-val="1" onclick="setSex(1,this)">Female</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>NIHSS <span class="val" id="nihssVal">10</span> <span class="unit">pts</span></label>
+          <input type="range" id="nihssIn" min="0" max="35" value="10" step="1">
+          <div class="range-labels"><span>0</span><span>18</span><span>35</span></div>
+        </div>
+        <div class="field">
+          <label>NLR <span class="val" id="nlrVal">4.3</span></label>
+          <input type="range" id="nlrIn" min="0.5" max="30" value="4.3" step="0.1">
+          <div class="range-labels"><span>0.5</span><span>15</span><span>30</span></div>
         </div>
       </div>
-      <div class="field">
-        <label>Baseline NIHSS <span class="val" id="nihssVal">10</span> <span class="unit">pts</span></label>
-        <input type="range" id="nihssIn" min="0" max="35" value="10" step="1">
-        <div class="range-labels"><span>0</span><span>10</span><span>20</span><span>35</span></div>
-      </div>
-      <div class="field">
-        <label>NLR <span class="val" id="nlrVal">4.3</span></label>
-        <input type="range" id="nlrIn" min="0.5" max="30" value="4.3" step="0.1">
-        <div class="range-labels"><span>0.5</span><span>10</span><span>20</span><span>30</span></div>
-      </div>
     </div>
-    <div class="btn-row">
-      <button class="btn" onclick="displayResult(compute())">Calculate Risk</button>
+
+    <div class="card" id="resultCard">
+      <h2><span class="dot dot-green"></span> Predicted Outcome</h2>
+      <div class="gauge-wrap">
+        <div class="gauge-bar"></div>
+        <div class="gauge-marker" id="gaugeMarker" style="left:50%"></div>
+        <div class="gauge-labels"><span>Low</span><span>10%</span><span>25%</span><span>40%+</span><span>High</span></div>
+      </div>
+      <div class="risk-display">
+        <div class="risk-value" id="riskValue">50.0%</div>
+        <div class="risk-category" id="riskCat">Moderate Risk</div>
+        <div class="risk-detail">Probability of poor outcome (mRS &gt;2 at Day 14)</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="num" id="statPoints">—</div><div class="lbl">Points</div></div>
+        <div class="stat-box"><div class="num" id="statLP">—</div><div class="lbl">Linear Pred.</div></div>
+        <div class="stat-box"><div class="num" id="statOR">—</div><div class="lbl">Odds Ratio</div></div>
+        <div class="stat-box"><div class="num">0.820</div><div class="lbl">C-Statistic</div></div>
+      </div>
     </div>
   </div>
 
-  <!-- RESULT CARD -->
-  <div class="card anim-2 result-section show" id="resultCard">
-    <h2><span class="dot dot-green"></span> Predicted Outcome</h2>
-    <div class="gauge-wrap">
-      <div class="gauge-bar"></div>
-      <div class="gauge-marker" id="gaugeMarker" style="left:50%"></div>
-      <div class="gauge-labels">
-        <span>Low</span><span>10%</span><span>25%</span><span>40%+</span><span>High</span>
-      </div>
-    </div>
-    <div class="risk-display">
-      <div class="risk-value" id="riskValue">50.0%</div>
-      <div class="risk-category" id="riskCat">Moderate Risk</div>
-      <div class="risk-detail">Predicted probability of poor functional outcome (mRS &gt; 2 at Day 14)</div>
-    </div>
-    <div class="stats-row">
-      <div class="stat-box"><div class="num" id="statPoints">—</div><div class="lbl">Total Points</div></div>
-      <div class="stat-box"><div class="num" id="statLP">—</div><div class="lbl">Linear Predictor</div></div>
-      <div class="stat-box"><div class="num" id="statOR">—</div><div class="lbl">Combined OR</div></div>
-      <div class="stat-box"><div class="num" id="statC">0.820</div><div class="lbl">C-Statistic</div></div>
-    </div>
-  </div>
-
-  <!-- NOMOGRAM CARD -->
-  <div class="card anim-3">
+  <!-- === BOTTOM: Horizontal Nomogram === -->
+  <div class="card">
     <h2><span class="dot dot-blue"></span> Dynamic Nomogram</h2>
     <div class="nomogram-wrap">
-      <canvas id="nomogram" width="900" height="620"></canvas>
+      <canvas id="nomogram" width="1000" height="400"></canvas>
     </div>
+  </div>
+
+  <div class="info-bar">
+    <strong>Model:</strong> logit(P) = −2.79 + 0.084×NIHSS + 0.246×NLR + 0.828×Female &ensp;|&ensp;
+    <strong>Risk:</strong> &lt;10% Low · 10–25% Moderate · 25–40% Elevated · &gt;40% High &ensp;|&ensp;
+    Hosmer-Lemeshow P &gt; 0.05 · Decision curve validated
   </div>
 </div>
 
 <footer>
-  Reference: Hu J, Wang L, Chen XY, He X, Wu JC. Nomogram for predicting short-term outcome in NVAF-related acute CES.
-  <em>Int J Cerebrovasc Dis</em> 2024; 32(10). DOI: 10.3760/cma.j.issn.1673-4165.2024.10.002 &ensp;|&ensp;
-  Research use only. Not medical advice.
+  Hu J, Wang L, Chen XY, He X, Wu JC. <em>Int J Cerebrovasc Dis</em> 2024; 32(10). · Research use only.
 </footer>
 
 <script>
 // === Published model (Hu et al., IJCVD 2024) ===
-const B0 = -2.7865;
-const B_NLR  = 0.246079;  // ln(1.279)
-const B_NIHSS = 0.084341; // ln(1.088)
-const B_FEMALE = 0.827678; // ln(2.288)
-
-// Nomogram point scaling (100-point system)
-const SCALE_NLR = 30, SCALE_NIHSS = 35;
+const B0 = -2.7865, B_NLR = 0.246079, B_NIHSS = 0.084341, B_FEMALE = 0.827678;
+const SCALE_NLR=30, SCALE_NIHSS=35;
 const TOTAL_BETA = B_NLR*SCALE_NLR + B_NIHSS*SCALE_NIHSS + B_FEMALE;
-const PTS_NLR   = 100 * B_NLR   / TOTAL_BETA;
-const PTS_NIHSS = 100 * B_NIHSS / TOTAL_BETA;
-const PTS_FEMALE = 100 * B_FEMALE / TOTAL_BETA;
+const PTS_NLR=100*B_NLR/TOTAL_BETA, PTS_NIHSS=100*B_NIHSS/TOTAL_BETA, PTS_FEMALE=100*B_FEMALE/TOTAL_BETA;
 
-let currentSex = 0;
+let currentSex=0;
+function setSex(v,btn){ currentSex=v; document.querySelectorAll('#sexGroup .seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); displayResult(compute()); }
 
-function setSex(val, btn) {
-  currentSex = val;
-  document.querySelectorAll('#sexGroup .seg-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  displayResult(compute());
-}
+const nlrIn=document.getElementById('nlrIn'), nihssIn=document.getElementById('nihssIn');
+const nlrVal=document.getElementById('nlrVal'), nihssVal=document.getElementById('nihssVal');
+const riskValue=document.getElementById('riskValue'), riskCat=document.getElementById('riskCat');
+const gaugeMarker=document.getElementById('gaugeMarker');
+const statPoints=document.getElementById('statPoints'), statLP=document.getElementById('statLP'), statOR=document.getElementById('statOR');
+const canvas=document.getElementById('nomogram'), ctx=canvas.getContext('2d');
 
-// DOM refs
-const nlrIn = document.getElementById('nlrIn');
-const nihssIn = document.getElementById('nihssIn');
-const nlrVal = document.getElementById('nlrVal');
-const nihssVal = document.getElementById('nihssVal');
-const resultCard = document.getElementById('resultCard');
-const riskValue = document.getElementById('riskValue');
-const riskCat = document.getElementById('riskCat');
-const gaugeMarker = document.getElementById('gaugeMarker');
-const statPoints = document.getElementById('statPoints');
-const statLP = document.getElementById('statLP');
-const statOR = document.getElementById('statOR');
-const canvas = document.getElementById('nomogram');
-const ctx = canvas.getContext('2d');
+function updateSlider(s){ const min=+s.min,max=+s.max,val=+s.value; s.style.setProperty('--fill',((val-min)/(max-min)*100)+'%'); }
+function compute(){ const nlr=+nlrIn.value,nihss=+nihssIn.value,sex=currentSex; const lp=B0+B_NLR*nlr+B_NIHSS*nihss+B_FEMALE*sex,prob=1/(1+Math.exp(-lp)); return {nlr,nihss,sex,lp,prob,totalPts:nlr*PTS_NLR+nihss*PTS_NIHSS+sex*PTS_FEMALE}; }
 
-function updateSlider(s) {
-  const min = +s.min, max = +s.max, val = +s.value;
-  s.style.setProperty('--fill', ((val-min)/(max-min)*100)+'%');
-}
+function animateValue(el,start,end,dur,fmt){ const t0=performance.now(); function step(ts){ const p=Math.min((ts-t0)/dur,1),e=1-Math.pow(1-p,3); el.textContent=fmt(start+(end-start)*e); if(p<1)requestAnimationFrame(step); } requestAnimationFrame(step); }
 
-function compute() {
-  const nlr=+nlrIn.value, nihss=+nihssIn.value, sex=currentSex;
-  const lp = B0 + B_NLR*nlr + B_NIHSS*nihss + B_FEMALE*sex;
-  const prob = 1/(1+Math.exp(-lp));
-  const pts = nlr*PTS_NLR + nihss*PTS_NIHSS + sex*PTS_FEMALE;
-  return {nlr,nihss,sex,lp,prob,totalPts:pts};
-}
+function displayResult(r){ const pp=r.prob*100; gaugeMarker.style.left=Math.max(2,Math.min(98,pp))+'%'; const prev=riskValue.textContent==='—'?0:parseFloat(riskValue.textContent); animateValue(riskValue,prev,pp,600,v=>v.toFixed(1)+'%'); let color,cat; if(pp<10){color='var(--green)';cat='Low Risk';}else if(pp<25){color='var(--orange)';cat='Moderate Risk';}else if(pp<40){color='var(--red)';cat='Elevated Risk';}else{color='var(--black)';cat='High Risk';} riskValue.style.color=color;riskCat.textContent=cat;riskCat.style.color=color; statPoints.textContent=Math.round(r.totalPts);statLP.textContent=r.lp.toFixed(2);statOR.textContent=Math.exp(r.lp).toFixed(2); drawNomogram(r); }
 
-function animateValue(el, start, end, dur, fmt) {
-  const t0 = performance.now();
-  function step(ts) {
-    const p = Math.min((ts-t0)/dur, 1);
-    const e = 1-Math.pow(1-p,3);
-    el.textContent = fmt(start + (end-start)*e);
-    if (p<1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
+// === HORIZONTAL NOMOGRAM (all visible without scrolling) ===
+function drawNomogram(r){
+  const DPR=Math.min(window.devicePixelRatio||1,2), W=1000, H=400;
+  canvas.width=W*DPR; canvas.height=H*DPR; canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const c=canvas.getContext('2d'); c.setTransform(DPR,0,0,DPR,0,0); c.clearRect(0,0,W,H);
+  const LM=100, RM=48, AXW=W-LM-RM, FONT='"Times New Roman",Times,Georgia,serif';
 
-function displayResult(r) {
-  resultCard.classList.add('show');
-  const pp = r.prob*100;
-  gaugeMarker.style.left = Math.max(2,Math.min(98,pp))+'%';
-
-  const prev = riskValue.textContent==='—'?0:parseFloat(riskValue.textContent);
-  animateValue(riskValue, prev, pp, 600, v=>v.toFixed(1)+'%');
-
-  let color,cat;
-  if (pp<10) { color='var(--green)'; cat='Low Risk'; }
-  else if (pp<25) { color='var(--orange)'; cat='Moderate Risk'; }
-  else if (pp<40) { color='var(--red)'; cat='Elevated Risk'; }
-  else { color='var(--black)'; cat='High Risk'; }
-  riskValue.style.color=color; riskCat.textContent=cat; riskCat.style.color=color;
-
-  statPoints.textContent = Math.round(r.totalPts);
-  statLP.textContent = r.lp.toFixed(2);
-  statOR.textContent = Math.exp(r.lp).toFixed(2);
-
-  drawNomogram(r);
-}
-
-// === CRISP NOMOGRAM with HiDPI rendering ===
-function drawNomogram(r) {
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  const W = 900, H = 640;
-  canvas.width = W * DPR;
-  canvas.height = H * DPR;
-  canvas.style.width = W + 'px';
-  canvas.style.height = H + 'px';
-  const c = canvas.getContext('2d');
-  c.setTransform(DPR,0,0,DPR,0,0);
-  c.clearRect(0, 0, W, H);
-
-  const LM=105, RM=55, AXW=W-LM-RM;
-  const FONT = '"Times New Roman", Times, Georgia, serif';
-
-  // Background grid lines
-  c.strokeStyle = 'rgba(0,0,0,0.03)'; c.lineWidth = 0.5;
-  for (let x = LM; x <= W-RM; x += 20) { c.beginPath(); c.moveTo(x, 20); c.lineTo(x, 600); c.stroke(); }
-
-  // Variable axes
-  const axes = [
-    { y:70,  label:'Baseline NIHSS',  min:0,   max:35, val:r.nihss, ppu:PTS_NIHSS,
-      ticks:[0,5,10,15,20,25,30,35] },
-    { y:170, label:'NLR',             min:0.5, max:30, val:r.nlr,   ppu:PTS_NLR,
-      ticks:[0.5,2,4,6,8,10,14,20,30] },
-    { y:265, label:'Sex',             min:0,   max:1,  val:r.sex,   ppu:PTS_FEMALE,
-      ticks:[0,1], tlabels:['Male','Female'] },
+  // Three axes drawn HORIZONTALLY, stacked compactly
+  const axes=[
+    { y:62,  label:'Baseline NIHSS',  min:0,   max:35,  val:r.nihss, ppu:PTS_NIHSS, ticks:[0,5,10,15,20,25,30,35], fmt:v=>v },
+    { y:140, label:'NLR',             min:0.5, max:30,  val:r.nlr,   ppu:PTS_NLR,   ticks:[0.5,2,4,6,8,10,14,20,30], fmt:v=>v.toFixed(1) },
+    { y:218, label:'Sex',             min:0,   max:1,   val:r.sex,   ppu:PTS_FEMALE, ticks:[0,1], tlabels:['Male','Female'], fmt:v=>v },
   ];
 
-  axes.forEach(ax => {
-    const y = ax.y;
-    // Main line
-    c.strokeStyle = '#1D1D1F'; c.lineWidth = 2.5;
-    c.beginPath(); c.moveTo(LM, y); c.lineTo(W-RM, y); c.stroke();
-    // Label
-    c.fillStyle = '#1D1D1F'; c.font = '600 16px '+FONT;
-    c.fillText(ax.label, 6, y+7);
-    // Point scale (top)
-    c.fillStyle = '#AEAEB2'; c.font = '11px '+FONT; c.textAlign = 'center';
-    for (let v=ax.min; v<=ax.max; v+=(ax.max-ax.min)/20) {
-      const x = LM + (v-ax.min)/(ax.max-ax.min)*AXW;
-      if (Math.abs(Math.round(v)-v)<0.01)
-        c.fillText(Math.round(v*ax.ppu), x, y-20);
+  axes.forEach(ax=>{
+    const y=ax.y;
+    // Axis line
+    c.strokeStyle='#1D1D1F'; c.lineWidth=2.5; c.beginPath(); c.moveTo(LM,y); c.lineTo(W-RM,y); c.stroke();
+    // Label on left
+    c.fillStyle='#1D1D1F'; c.font='600 15px '+FONT; c.fillText(ax.label,6,y+6);
+    // Points markers ABOVE axis
+    c.fillStyle='#AEAEB2'; c.font='10px '+FONT; c.textAlign='center';
+    for(let v=ax.min; v<=ax.max; v+=(ax.max-ax.min)/20){
+      const x=LM+(v-ax.min)/(ax.max-ax.min)*AXW;
+      if(Math.abs(Math.round(v)-v)<0.01) c.fillText(Math.round(v*ax.ppu),x,y-18);
     }
-    c.textAlign = 'start';
-    // Tick marks and labels
-    const tlabels = ax.tlabels || ax.ticks.map(String);
-    ax.ticks.forEach((t,i) => {
-      const x = LM + (t-ax.min)/(ax.max-ax.min)*AXW;
-      c.strokeStyle = '#86868B'; c.lineWidth = 1;
-      c.beginPath(); c.moveTo(x, y-12); c.lineTo(x, y+12); c.stroke();
-      c.fillStyle = '#555'; c.font = '13px '+FONT; c.textAlign = 'center';
-      c.fillText(tlabels[i], x, y+30);
+    // Tick marks + labels BELOW axis
+    const tl=ax.tlabels||ax.ticks.map(String);
+    ax.ticks.forEach((t,i)=>{
+      const x=LM+(t-ax.min)/(ax.max-ax.min)*AXW;
+      c.strokeStyle='#86868B'; c.lineWidth=1; c.beginPath(); c.moveTo(x,y-10); c.lineTo(x,y+10); c.stroke();
+      c.fillStyle='#555'; c.font='12px '+FONT; c.textAlign='center'; c.fillText(tl[i],x,y+26);
     });
-    c.textAlign = 'start';
-    // Red current-value dot
-    const vx = LM + (ax.val-ax.min)/(ax.max-ax.min)*AXW;
-    c.fillStyle = '#FF3B30'; c.beginPath(); c.arc(vx, y, 10, 0, Math.PI*2); c.fill();
-    c.fillStyle = '#fff'; c.font = 'bold 12px '+FONT; c.textAlign = 'center';
-    const vt = ax.val===Math.round(ax.val) ? ax.val : ax.val.toFixed(1);
-    c.fillText(vt, vx, y+5); c.textAlign = 'start';
+    c.textAlign='start';
+    // Red dot at current value
+    const vx=LM+(ax.val-ax.min)/(ax.max-ax.min)*AXW;
+    c.fillStyle='#FF3B30'; c.beginPath(); c.arc(vx,y,9,0,Math.PI*2); c.fill();
+    c.fillStyle='#fff'; c.font='bold 11px '+FONT; c.textAlign='center'; c.fillText(ax.fmt(ax.val),vx,y+5);
+    c.textAlign='start';
   });
 
-  // ---- Total Points ----
-  const ptsY=355;
-  c.strokeStyle='#0071E3'; c.lineWidth=4;
-  c.beginPath(); c.moveTo(LM,ptsY); c.lineTo(W-RM,ptsY); c.stroke();
-  c.fillStyle='#0071E3'; c.font='600 16px '+FONT;
-  c.fillText('Total Points',6,ptsY+8);
-  for (let p=0; p<=100; p+=10) {
-    const x=LM+(p/100)*AXW;
-    c.strokeStyle='#0071E3'; c.lineWidth=1;
-    c.beginPath(); c.moveTo(x,ptsY-12); c.lineTo(x,ptsY+12); c.stroke();
-    c.fillStyle='#0071E3'; c.font='12px '+FONT; c.textAlign='center';
-    c.fillText(p,x,ptsY+28);
-  }
-  c.textAlign='start';
-  const ptsClamped = Math.max(0,Math.min(100,r.totalPts));
-  const ptsX = LM+(ptsClamped/100)*AXW;
-  c.fillStyle='#FF3B30'; c.beginPath(); c.arc(ptsX,ptsY,11,0,Math.PI*2); c.fill();
-  c.fillStyle='#fff'; c.font='bold 12px '+FONT; c.textAlign='center';
-  c.fillText(Math.round(r.totalPts),ptsX,ptsY+5); c.textAlign='start';
+  // ---- Summary axes (below the three input axes) ----
+  const ptsY=295, lpY=340, prY=380;
+  const lpMin=-4, lpMax=5;
 
-  // ---- Linear Predictor ----
-  const lpY=445, lpMin=-4, lpMax=5;
-  c.strokeStyle='#0071E3'; c.lineWidth=3;
-  c.beginPath(); c.moveTo(LM,lpY); c.lineTo(W-RM,lpY); c.stroke();
-  c.fillStyle='#0071E3'; c.font='600 15px '+FONT;
-  c.fillText('Linear Predictor',6,lpY+6);
-  for (let v=lpMin; v<=lpMax; v+=0.5) {
-    const x=LM+(v-lpMin)/(lpMax-lpMin)*AXW;
-    c.strokeStyle='#0071E3'; c.lineWidth=0.5;
-    c.beginPath(); c.moveTo(x,lpY-8); c.lineTo(x,lpY+8); c.stroke();
-    c.fillStyle='#0071E3'; c.font='11px '+FONT; c.textAlign='center';
-    c.fillText(v.toFixed(1),x,lpY+24);
-  }
-  c.textAlign='start';
+  // Total Points
+  c.strokeStyle='#0071E3'; c.lineWidth=4; c.beginPath(); c.moveTo(LM,ptsY); c.lineTo(W-RM,ptsY); c.stroke();
+  c.fillStyle='#0071E3'; c.font='600 14px '+FONT; c.fillText('Total Points',6,ptsY+7);
+  for(let p=0;p<=100;p+=20){ const x=LM+(p/100)*AXW; c.strokeStyle='#0071E3';c.lineWidth=1; c.beginPath();c.moveTo(x,ptsY-10);c.lineTo(x,ptsY+10);c.stroke(); c.fillStyle='#0071E3';c.font='11px '+FONT;c.textAlign='center';c.fillText(p,x,ptsY+26); } c.textAlign='start';
+  const ptsC=Math.max(0,Math.min(100,r.totalPts)), ptsX=LM+(ptsC/100)*AXW;
+  c.fillStyle='#FF3B30';c.beginPath();c.arc(ptsX,ptsY,10,0,Math.PI*2);c.fill();
+  c.fillStyle='#fff';c.font='bold 11px '+FONT;c.textAlign='center';c.fillText(Math.round(r.totalPts),ptsX,ptsY+5);c.textAlign='start';
 
-  // ---- Probability ----
-  const prY=525;
-  c.strokeStyle='#1D1D1F'; c.lineWidth=4;
-  c.beginPath(); c.moveTo(LM,prY); c.lineTo(W-RM,prY); c.stroke();
-  c.fillStyle='#1D1D1F'; c.font='600 15px '+FONT;
-  c.fillText('Predicted Probability',6,prY+6);
-  [0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.95].forEach(p=>{
-    const lpV=Math.log(p/(1-p)), x=LM+(lpV-lpMin)/(lpMax-lpMin)*AXW;
-    if (x>=LM&&x<=W-RM) {
-      c.strokeStyle='#1D1D1F'; c.lineWidth=0.5;
-      c.beginPath(); c.moveTo(x,prY-10); c.lineTo(x,prY+10); c.stroke();
-      c.fillStyle='#1D1D1F'; c.font='11px '+FONT; c.textAlign='center';
-      c.fillText(Math.round(p*100)+'%',x,prY+26);
-    }
-  });
-  c.textAlign='start';
+  // Linear Predictor
+  c.strokeStyle='#0071E3'; c.lineWidth=3; c.beginPath(); c.moveTo(LM,lpY); c.lineTo(W-RM,lpY); c.stroke();
+  c.fillStyle='#0071E3'; c.font='600 13px '+FONT; c.fillText('Linear Predictor',6,lpY+5);
+  for(let v=lpMin;v<=lpMax;v+=1){ const x=LM+(v-lpMin)/(lpMax-lpMin)*AXW; c.strokeStyle='#0071E3';c.lineWidth=0.5;c.beginPath();c.moveTo(x,lpY-6);c.lineTo(x,lpY+6);c.stroke(); c.fillStyle='#0071E3';c.font='10px '+FONT;c.textAlign='center';c.fillText(v.toFixed(0),x,lpY+22); } c.textAlign='start';
 
-  // Red markers on LP and PR axes
-  const lpClamped=Math.max(lpMin,Math.min(lpMax,r.lp));
-  const lpX=LM+(lpClamped-lpMin)/(lpMax-lpMin)*AXW;
-  const prX=lpX;
-  c.fillStyle='#FF3B30';
-  c.beginPath(); c.arc(lpX,lpY,11,0,Math.PI*2); c.fill();
-  c.beginPath(); c.arc(prX,prY,11,0,Math.PI*2); c.fill();
-  c.fillStyle='#fff'; c.font='bold 12px '+FONT; c.textAlign='center';
-  c.fillText(Math.round(r.prob*100)+'%',prX,prY+5);
-  c.textAlign='start';
+  // Predicted Probability - positioned clearly below, NO overlap
+  c.strokeStyle='#1D1D1F'; c.lineWidth=4; c.beginPath(); c.moveTo(LM,prY); c.lineTo(W-RM,prY); c.stroke();
+  c.fillStyle='#1D1D1F'; c.font='600 13px '+FONT; c.fillText('Predicted Probability',6,prY+5);
+  // Fewer tick marks, well-spaced
+  [0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9].forEach(p=>{
+    const lpv=Math.log(p/(1-p)), x=LM+(lpv-lpMin)/(lpMax-lpMin)*AXW;
+    if(x>=LM&&x<=W-RM){ c.strokeStyle='#1D1D1F';c.lineWidth=0.5;c.beginPath();c.moveTo(x,prY-8);c.lineTo(x,prY+8);c.stroke(); c.fillStyle='#1D1D1F';c.font='10px '+FONT;c.textAlign='center';c.fillText(Math.round(p*100)+'%',x,prY+24); }
+  }); c.textAlign='start';
+
+  // Red markers on LP and PR
+  const lpC=Math.max(lpMin,Math.min(lpMax,r.lp)), lpX=LM+(lpC-lpMin)/(lpMax-lpMin)*AXW;
+  c.fillStyle='#FF3B30'; c.beginPath();c.arc(lpX,lpY,10,0,Math.PI*2);c.fill(); c.beginPath();c.arc(lpX,prY,10,0,Math.PI*2);c.fill();
+  c.fillStyle='#fff';c.font='bold 11px '+FONT;c.textAlign='center';c.fillText(Math.round(r.prob*100)+'%',lpX,prY+5);c.textAlign='start';
 
   // Vertical guide
-  c.setLineDash([4,6]); c.strokeStyle='rgba(255,59,48,0.3)'; c.lineWidth=2;
-  c.beginPath(); c.moveTo(ptsX,axes[0].y); c.lineTo(ptsX,prY); c.stroke();
-  c.setLineDash([]);
+  c.setLineDash([3,5]);c.strokeStyle='rgba(255,59,48,0.25)';c.lineWidth=2;c.beginPath();c.moveTo(ptsX,axes[0].y);c.lineTo(ptsX,prY);c.stroke();c.setLineDash([]);
 
-  // Title
-  c.fillStyle='#1D1D1F'; c.font='bold 17px '+FONT; c.textAlign='center';
-  c.fillText('Points',(LM+W-RM)/2, 40);
+  // Top title
+  c.fillStyle='#1D1D1F';c.font='bold 16px '+FONT;c.textAlign='center';c.fillText('Points',(LM+W-RM)/2,32);c.textAlign='start';
 }
 
-// Slider events
-nlrIn.addEventListener('input', ()=>{
-  nlrVal.textContent = parseFloat(nlrIn.value).toFixed(1);
-  updateSlider(nlrIn);
-  displayResult(compute());
-});
-nihssIn.addEventListener('input', ()=>{
-  nihssVal.textContent = nihssIn.value;
-  updateSlider(nihssIn);
-  displayResult(compute());
-});
+// Events
+nlrIn.addEventListener('input',()=>{ nlrVal.textContent=parseFloat(nlrIn.value).toFixed(1);updateSlider(nlrIn);displayResult(compute()); });
+nihssIn.addEventListener('input',()=>{ nihssVal.textContent=nihssIn.value;updateSlider(nihssIn);displayResult(compute()); });
 
-// Init
 [nlrIn,nihssIn].forEach(updateSlider);
 displayResult(compute());
 </script>
