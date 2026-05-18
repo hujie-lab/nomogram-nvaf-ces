@@ -305,7 +305,7 @@ function drawNomogram(r) {
     c.beginPath(); c.moveTo(LM, y); c.lineTo(W-RM, y); c.stroke();
     // Label
     c.fillStyle = '#1D1D1F'; c.font = '600 16px '+FONT;
-    c.fillText(ax.label, 6, y+7);
+    c.fillText(ax.label, LM+4, y-26);
     // Point scale (top)
     c.fillStyle = '#AEAEB2'; c.font = '11px '+FONT; c.textAlign = 'center';
     for (let v=ax.min; v<=ax.max; v+=(ax.max-ax.min)/20) {
@@ -327,9 +327,9 @@ function drawNomogram(r) {
     // Red current-value dot
     const vx = LM + (ax.val-ax.min)/(ax.max-ax.min)*AXW;
     c.fillStyle = '#FF3B30'; c.beginPath(); c.arc(vx, y, 10, 0, Math.PI*2); c.fill();
-    c.fillStyle = '#fff'; c.font = 'bold 12px '+FONT; c.textAlign = 'center';
+    c.fillStyle = "#FF3B30"; c.font = "bold 12px "+FONT; c.textAlign = "center";
     const vt = ax.val===Math.round(ax.val) ? ax.val : ax.val.toFixed(1);
-    c.fillText(vt, vx, y+5); c.textAlign = 'start';
+    c.fillText(vt, vx, y-20); c.textAlign = "start";
   });
 
   // ---- Total Points ----
