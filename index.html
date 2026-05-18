@@ -9,69 +9,61 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { height: 100vh; overflow: hidden; font-family: 'Times New Roman', Times, Georgia, serif; background: linear-gradient(180deg, #FBFBFD 0%, #F5F5F7 100%); color: var(--text); -webkit-font-smoothing: antialiased; }
 
-/* Full-viewport single-page layout: 3 columns */
-.page { display: flex; height: 100vh; gap: 10px; padding: 10px; }
-.col-left { width: 280px; min-width: 280px; display: flex; flex-direction: column; gap: 10px; }
-.col-mid { width: 240px; min-width: 240px; display: flex; flex-direction: column; gap: 10px; }
-.col-right { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.page { display: flex; height: 100vh; gap: 8px; padding: 8px; }
+.col-left { width: 250px; min-width: 250px; display: flex; flex-direction: column; gap: 6px; }
+.col-mid { width: 210px; min-width: 210px; display: flex; flex-direction: column; gap: 6px; }
+.col-right { flex: 1; min-width: 0; }
 
-.card { background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 14px; padding: 14px 16px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
-
-.card h2 { font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 5px; }
+.card { background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 14px; padding: 12px 14px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
+.card h2 { font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 5px; }
 .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .dot-blue { background: var(--blue); } .dot-green { background: var(--green); }
 
-/* Header */
-.header { text-align: center; padding: 4px 0 2px; }
-.header h1 { font-size: 1.15rem; font-weight: 700; }
-.header p { font-size: 0.7rem; color: var(--s); }
-.header .cit { font-size: 0.62rem; color: var(--t); font-style: italic; }
+.header { text-align: center; padding: 2px 0; }
+.header h1 { font-size: 1rem; font-weight: 700; }
+.header p { font-size: 0.62rem; color: var(--s); }
+.header .cit { font-size: 0.58rem; color: var(--t); font-style: italic; }
 
-/* Input fields */
-.field { margin-bottom: 8px; }
-.field label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.75rem; font-weight: 600; margin-bottom: 3px; }
-.field label .val { font-size: 0.95rem; color: var(--blue); font-weight: 700; }
-.field label .unit { font-size: 0.65rem; color: var(--t); font-weight: 400; }
+.field { margin-bottom: 6px; }
+.field label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.72rem; font-weight: 600; margin-bottom: 2px; }
+.field label .val { font-size: 0.9rem; color: var(--blue); font-weight: 700; }
+.field label .unit { font-size: 0.62rem; color: var(--t); font-weight: 400; }
 
 .segmented { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-.segmented .seg-btn { flex: 1; text-align: center; padding: 8px 0; cursor: pointer; font-size: 0.8rem; font-weight: 500; color: var(--s); background: transparent; border: none; font-family: inherit; border-right: 1px solid var(--border); transition: all 0.2s; }
+.segmented .seg-btn { flex: 1; text-align: center; padding: 7px 0; cursor: pointer; font-size: 0.78rem; font-weight: 500; color: var(--s); background: transparent; border: none; font-family: inherit; border-right: 1px solid var(--border); transition: all 0.2s; }
 .segmented .seg-btn:last-child { border-right: none; }
 .segmented .seg-btn:hover { background: rgba(0,113,227,0.04); }
 .segmented .seg-btn.active { background: var(--blue); color: #fff; font-weight: 600; }
 
 input[type=range] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--blue) var(--fill,0%), var(--border) var(--fill,0%)); outline: none; }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid var(--blue); cursor: pointer; box-shadow: 0 1px 4px rgba(0,113,227,0.2); }
-.range-labels { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--t); margin-top: 1px; }
+.range-labels { display: flex; justify-content: space-between; font-size: 0.58rem; color: var(--t); margin-top: 1px; }
 
-/* Gauge */
-.gauge-wrap { position: relative; width: 100%; margin: 6px 0 10px; }
+.gauge-wrap { position: relative; width: 100%; margin: 4px 0 8px; }
 .gauge-bar { width: 100%; height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--green) 0%, var(--orange) 35%, var(--red) 70%, var(--black) 100%); }
 .gauge-marker { position: absolute; top: -4px; width: 4px; height: 22px; border-radius: 2px; background: var(--black); transform: translateX(-50%); transition: left 0.6s cubic-bezier(0.25,0.1,0.25,1); }
-.gauge-labels { display: flex; justify-content: space-between; font-size: 0.58rem; color: var(--s); margin-top: 3px; }
+.gauge-labels { display: flex; justify-content: space-between; font-size: 0.56rem; color: var(--s); margin-top: 3px; }
 
 .risk-display { text-align: center; }
-.risk-value { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1; transition: color 0.5s; }
-.risk-category { font-size: 0.78rem; font-weight: 600; margin-top: 1px; }
-.risk-detail { font-size: 0.65rem; color: var(--s); margin-top: 1px; }
+.risk-value { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1; transition: color 0.5s; }
+.risk-category { font-size: 0.72rem; font-weight: 600; margin-top: 1px; }
+.risk-detail { font-size: 0.6rem; color: var(--s); margin-top: 1px; }
 
-.stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 8px; }
-.stat-box { background: #FBFBFD; border-radius: 8px; padding: 8px 6px; text-align: center; border: 1px solid #F0F0F5; }
-.stat-box .num { font-size: 1rem; font-weight: 700; }
-.stat-box .lbl { font-size: 0.58rem; color: var(--t); margin-top: 1px; text-transform: uppercase; letter-spacing: 0.03em; }
+.stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-top: 6px; }
+.stat-box { background: #FBFBFD; border-radius: 8px; padding: 6px 4px; text-align: center; border: 1px solid #F0F0F5; }
+.stat-box .num { font-size: 0.9rem; font-weight: 700; }
+.stat-box .lbl { font-size: 0.55rem; color: var(--t); margin-top: 1px; text-transform: uppercase; letter-spacing: 0.02em; }
 
-/* Nomogram - fills remaining space */
+.info-bar { background: rgba(0,113,227,0.04); border-radius: 8px; padding: 5px 10px; font-size: 0.58rem; color: var(--s); text-align: center; border: 1px solid rgba(0,113,227,0.08); margin-top: 4px; }
+
 #nomogram { display: block; width: 100%; height: 100%; }
 
-.info-bar { background: rgba(0,113,227,0.04); border-radius: 8px; padding: 6px 12px; font-size: 0.62rem; color: var(--s); text-align: center; border: 1px solid rgba(0,113,227,0.08); margin-top: 6px; }
-
-footer { text-align: center; font-size: 0.58rem; color: var(--t); margin-top: 4px; }
+footer { text-align: center; font-size: 0.55rem; color: var(--t); margin-top: 2px; }
 </style>
 </head>
 <body>
 
 <div class="page">
-
-  <!-- COLUMN 1: Header + Inputs -->
   <div class="col-left">
     <div class="header">
       <h1>NVAF-CES Outcome Nomogram</h1>
@@ -80,8 +72,7 @@ footer { text-align: center; font-size: 0.58rem; color: var(--t); margin-top: 4p
     </div>
 
     <div class="card" style="flex:1">
-      <h2><span class="dot dot-blue"></span> Patient Parameters</h2>
-
+      <h2><span class="dot dot-blue"></span> Parameters</h2>
       <div class="field">
         <label>Sex</label>
         <div class="segmented" id="sexGroup">
@@ -89,20 +80,17 @@ footer { text-align: center; font-size: 0.58rem; color: var(--t); margin-top: 4p
           <button class="seg-btn" data-val="1" onclick="setSex(1,this)">Female</button>
         </div>
       </div>
-
       <div class="field">
-        <label>Baseline NIHSS <span class="val" id="nihssVal">10</span> <span class="unit">pts</span></label>
+        <label>NIHSS <span class="val" id="nihssVal">10</span></label>
         <input type="range" id="nihssIn" min="0" max="35" value="10" step="1">
         <div class="range-labels"><span>0</span><span>18</span><span>35</span></div>
       </div>
-
       <div class="field">
         <label>NLR <span class="val" id="nlrVal">4.3</span></label>
         <input type="range" id="nlrIn" min="0.5" max="30" value="4.3" step="0.1">
         <div class="range-labels"><span>0.5</span><span>15</span><span>30</span></div>
       </div>
-
-      <div class="stats-row" style="margin-top:16px">
+      <div class="stats-row">
         <div class="stat-box"><div class="num" id="statPoints">—</div><div class="lbl">Points</div></div>
         <div class="stat-box"><div class="num" id="statLP">—</div><div class="lbl">Linear Pred.</div></div>
         <div class="stat-box"><div class="num" id="statOR">—</div><div class="lbl">Odds Ratio</div></div>
@@ -111,7 +99,6 @@ footer { text-align: center; font-size: 0.58rem; color: var(--t); margin-top: 4p
     </div>
   </div>
 
-  <!-- COLUMN 2: Result Gauge -->
   <div class="col-mid">
     <div class="card" style="flex:1">
       <h2><span class="dot dot-green"></span> Predicted Outcome</h2>
@@ -122,26 +109,21 @@ footer { text-align: center; font-size: 0.58rem; color: var(--t); margin-top: 4p
       </div>
       <div class="risk-display">
         <div class="risk-value" id="riskValue">50.0%</div>
-        <div class="risk-category" id="riskCat">Moderate Risk</div>
-        <div class="risk-detail">Probability of poor outcome<br>(mRS &gt;2 at Day 14)</div>
+        <div class="risk-category" id="riskCat">Moderate</div>
+        <div class="risk-detail">Poor outcome (mRS &gt;2 Day 14)</div>
       </div>
-
       <div class="info-bar">
-        <strong>N = 196</strong> (109 Female, 55.6%)<br>
-        C-statistic 0.820 · Bootstrap validated<br>
-        Hosmer-Lemeshow P &gt; 0.05
+        N = 196 · C-statistic 0.820<br>Bootstrap validated · HL P &gt; 0.05
       </div>
     </div>
   </div>
 
-  <!-- COLUMN 3: Nomogram -->
   <div class="col-right">
-    <div class="card" style="flex:1; display:flex; flex-direction:column; padding:8px 10px;">
-      <h2 style="margin-bottom:6px"><span class="dot dot-blue"></span> Dynamic Nomogram</h2>
+    <div class="card" id="nomoCard" style="flex:1; display:flex; flex-direction:column; padding:8px 10px;">
+      <h2 style="margin-bottom:4px"><span class="dot dot-blue"></span> Dynamic Nomogram</h2>
       <canvas id="nomogram"></canvas>
     </div>
   </div>
-
 </div>
 
 <script>
@@ -149,101 +131,107 @@ const B0=-2.7865, B_NLR=0.246079, B_NIHSS=0.084341, B_FEMALE=0.827678;
 const SCALE_NLR=30,SCALE_NIHSS=35,TOTAL_BETA=B_NLR*SCALE_NLR+B_NIHSS*SCALE_NIHSS+B_FEMALE;
 const PTS_NLR=100*B_NLR/TOTAL_BETA,PTS_NIHSS=100*B_NIHSS/TOTAL_BETA,PTS_FEMALE=100*B_FEMALE/TOTAL_BETA;
 let currentSex=0;
-function setSex(v,btn){ currentSex=v; document.querySelectorAll('#sexGroup .seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); displayResult(compute()); }
+function setSex(v,btn){currentSex=v;document.querySelectorAll('#sexGroup .seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');displayResult(compute());}
 
 const nlrIn=document.getElementById('nlrIn'),nihssIn=document.getElementById('nihssIn');
 const nlrVal=document.getElementById('nlrVal'),nihssVal=document.getElementById('nihssVal');
 const riskValue=document.getElementById('riskValue'),riskCat=document.getElementById('riskCat');
 const gaugeMarker=document.getElementById('gaugeMarker');
 const statPoints=document.getElementById('statPoints'),statLP=document.getElementById('statLP'),statOR=document.getElementById('statOR');
-const canvas=document.getElementById('nomogram'),ctx=canvas.getContext('2d');
+const canvas=document.getElementById('nomogram'),nomoCard=document.getElementById('nomoCard');
 
-function updateSlider(s){ const min=+s.min,max=+s.max,val=+s.value; s.style.setProperty('--fill',((val-min)/(max-min)*100)+'%'); }
-function compute(){ const nlr=+nlrIn.value,nihss=+nihssIn.value,sex=currentSex; const lp=B0+B_NLR*nlr+B_NIHSS*nihss+B_FEMALE*sex,prob=1/(1+Math.exp(-lp)); return {nlr,nihss,sex,lp,prob,totalPts:nlr*PTS_NLR+nihss*PTS_NIHSS+sex*PTS_FEMALE}; }
+function updateSlider(s){const min=+s.min,max=+s.max,val=+s.value;s.style.setProperty('--fill',((val-min)/(max-min)*100)+'%');}
+function compute(){const nlr=+nlrIn.value,nihss=+nihssIn.value,sex=currentSex;const lp=B0+B_NLR*nlr+B_NIHSS*nihss+B_FEMALE*sex,prob=1/(1+Math.exp(-lp));return {nlr,nihss,sex,lp,prob,totalPts:nlr*PTS_NLR+nihss*PTS_NIHSS+sex*PTS_FEMALE};}
 
-function animateValue(el,start,end,dur,fmt){ const t0=performance.now(); function step(ts){ const p=Math.min((ts-t0)/dur,1),e=1-Math.pow(1-p,3); el.textContent=fmt(start+(end-start)*e); if(p<1)requestAnimationFrame(step); } requestAnimationFrame(step); }
+function animateValue(el,start,end,dur,fmt){const t0=performance.now();function step(ts){const p=Math.min((ts-t0)/dur,1),e=1-Math.pow(1-p,3);el.textContent=fmt(start+(end-start)*e);if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
 
-function displayResult(r){ const pp=r.prob*100; gaugeMarker.style.left=Math.max(2,Math.min(98,pp))+'%'; const prev=riskValue.textContent==='—'?0:parseFloat(riskValue.textContent); animateValue(riskValue,prev,pp,600,v=>v.toFixed(1)+'%'); let color,cat; if(pp<10){color='var(--green)';cat='Low Risk';}else if(pp<25){color='var(--orange)';cat='Moderate Risk';}else if(pp<40){color='var(--red)';cat='Elevated Risk';}else{color='var(--black)';cat='High Risk';} riskValue.style.color=color;riskCat.textContent=cat;riskCat.style.color=color; statPoints.textContent=Math.round(r.totalPts);statLP.textContent=r.lp.toFixed(2);statOR.textContent=Math.exp(r.lp).toFixed(2); drawNomogram(r); }
+function displayResult(r){const pp=r.prob*100;gaugeMarker.style.left=Math.max(2,Math.min(98,pp))+'%';const prev=riskValue.textContent==='—'?0:parseFloat(riskValue.textContent);animateValue(riskValue,prev,pp,600,v=>v.toFixed(1)+'%');let color,cat;if(pp<10){color='var(--green)';cat='Low Risk';}else if(pp<25){color='var(--orange)';cat='Moderate Risk';}else if(pp<40){color='var(--red)';cat='Elevated Risk';}else{color='var(--black)';cat='High Risk';}riskValue.style.color=color;riskCat.textContent=cat;riskCat.style.color=color;statPoints.textContent=Math.round(r.totalPts);statLP.textContent=r.lp.toFixed(2);statOR.textContent=Math.exp(r.lp).toFixed(2);drawNomogram(r);}
 
+// Draw once, canvas size from CSS only (no style.width override that changes sizing)
+let lastW=0,lastH=0;
 function drawNomogram(r){
   const rect=canvas.parentElement.getBoundingClientRect();
-  const W=rect.width-20, H=rect.height-40;
+  const W=Math.floor(rect.width-16), H=Math.floor(rect.height-32);
   if(W<200||H<100) return;
   const DPR=Math.min(window.devicePixelRatio||1,2);
-  canvas.width=W*DPR; canvas.height=H*DPR; canvas.style.width=W+'px'; canvas.style.height=H+'px';
-  const c=canvas.getContext('2d'); c.setTransform(DPR,0,0,DPR,0,0); c.clearRect(0,0,W,H);
-  const LM=88,RM=40,AXW=W-LM-RM,FONT='"Times New Roman",Times,Georgia,serif';
-  const fs=(W/900); // scale font with width
+  // Only resize canvas bitmap if container size actually changed
+  if(Math.abs(canvas.width-DPR*W)>2||Math.abs(canvas.height-DPR*H)>2){
+    canvas.width=W*DPR; canvas.height=H*DPR;
+    canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  }
+  const c=canvas.getContext('2d');c.setTransform(DPR,0,0,DPR,0,0);c.clearRect(0,0,W,H);
+  const LM=80,RM=36,AXW=W-LM-RM,FONT='"Times New Roman",Times,Georgia,serif';
+  const fs=W/900;
 
-  // Calculate proportional spacing
-  const yGap=(H-40)/6;
-  const axY=[yGap*0.6,yGap*1.7,yGap*2.8];
-  const ptsY=yGap*3.8, lpY=yGap*4.6, prY=yGap*5.4;
+  // Compute Y positions with generous spacing
+  const sixths=(H-24)/6;
+  const axY=[sixths*0.6, sixths*1.7, sixths*2.8];
+  const ptsY=sixths*3.8, lpY=sixths*4.6, prY=sixths*5.4;
 
   const axes=[
-    { y:axY[0], label:'Baseline NIHSS', min:0, max:35, val:r.nihss, ppu:PTS_NIHSS, ticks:[0,5,10,15,20,25,30,35], fmt:v=>String(v) },
-    { y:axY[1], label:'NLR',            min:0.5, max:30, val:r.nlr,   ppu:PTS_NLR,   ticks:[0.5,2,4,6,8,10,14,20,30], fmt:v=>v.toFixed(1) },
-    { y:axY[2], label:'Sex',            min:0,   max:1,  val:r.sex,   ppu:PTS_FEMALE, ticks:[0,1], tlabels:['Male','Female'], fmt:v=>String(v) },
+    {y:axY[0], label:'Baseline NIHSS', min:0, max:35, val:r.nihss, ppu:PTS_NIHSS, ticks:[0,5,10,15,20,25,30,35], fmt:v=>String(v)},
+    {y:axY[1], label:'NLR',            min:0.5,max:30, val:r.nlr,   ppu:PTS_NLR,   ticks:[0.5,2,4,6,8,10,14,20,30], fmt:v=>v.toFixed(1)},
+    {y:axY[2], label:'Sex',            min:0,  max:1,  val:r.sex,   ppu:PTS_FEMALE, ticks:[0,1], tlabels:['Male','Female'], fmt:v=>String(v)},
   ];
 
   axes.forEach(ax=>{
-    const y=ax.y;
+    const y=ax.y, LABEL_GAP=28, TICK_GAP=22;
     // Axis line
     c.strokeStyle='#1D1D1F';c.lineWidth=2;c.beginPath();c.moveTo(LM,y);c.lineTo(W-RM,y);c.stroke();
-    // Label ABOVE the axis (well clear)
-    c.fillStyle='#1D1D1F';c.font=`600 ${14*fs}px ${FONT}`;
-    c.fillText(ax.label, LM+4, y-26);
-    // Points scale above axis line
+    // Label far ABOVE line
+    c.fillStyle='#1D1D1F';c.font=`600 ${14*fs}px ${FONT}`;c.fillText(ax.label,LM+4,y-LABEL_GAP+4);
+    // Points scale above line
     c.fillStyle='#AEAEB2';c.font=`${9*fs}px ${FONT}`;c.textAlign='center';
     for(let v=ax.min;v<=ax.max;v+=(ax.max-ax.min)/16){
       const x=LM+(v-ax.min)/(ax.max-ax.min)*AXW;
-      if(Math.abs(Math.round(v)-v)<0.01) c.fillText(Math.round(v*ax.ppu),x,y-14);
+      if(Math.abs(Math.round(v)-v)<0.01) c.fillText(Math.round(v*ax.ppu),x,y-12);
     }
-    // Tick marks centered on axis line, labels BELOW with clear gap
+    // Tick marks + labels below
     const tl=ax.tlabels||ax.ticks.map(String);
     ax.ticks.forEach((t,i)=>{
       const x=LM+(t-ax.min)/(ax.max-ax.min)*AXW;
-      c.strokeStyle='#86868B';c.lineWidth=0.8;c.beginPath();c.moveTo(x,y-10);c.lineTo(x,y+10);c.stroke();
-      c.fillStyle='#555';c.font=`${11*fs}px ${FONT}`;c.textAlign='center';c.fillText(tl[i],x,y+24);
+      c.strokeStyle='#86868B';c.lineWidth=0.8;c.beginPath();c.moveTo(x,y-8);c.lineTo(x,y+8);c.stroke();
+      c.fillStyle='#555';c.font=`${11*fs}px ${FONT}`;c.fillText(tl[i],x,y+TICK_GAP);
     });
     c.textAlign='start';
-    // Red dot on axis line, value text ABOVE dot (not overlapping axis)
+    // Red marker ON axis, value text ABOVE marker
     const vx=LM+(ax.val-ax.min)/(ax.max-ax.min)*AXW;
     c.fillStyle='#FF3B30';c.beginPath();c.arc(vx,y,7,0,Math.PI*2);c.fill();
     c.fillStyle='#FF3B30';c.font=`bold ${10*fs}px ${FONT}`;c.textAlign='center';
-    c.fillText(ax.fmt(ax.val),vx,y-18);c.textAlign='start';
+    c.fillText(ax.fmt(ax.val),vx,y-20);c.textAlign='start';
   });
 
   // Total Points
   c.strokeStyle='#0071E3';c.lineWidth=3;c.beginPath();c.moveTo(LM,ptsY);c.lineTo(W-RM,ptsY);c.stroke();
-  c.fillStyle='#0071E3';c.font=`600 ${13*fs}px ${FONT}`;c.fillText('Total Points',4,ptsY+6);
-  for(let p=0;p<=100;p+=25){ const x=LM+(p/100)*AXW;c.strokeStyle='#0071E3';c.lineWidth=0.8;c.beginPath();c.moveTo(x,ptsY-8);c.lineTo(x,ptsY+8);c.stroke();c.fillStyle='#0071E3';c.font=`${10*fs}px ${FONT}`;c.textAlign='center';c.fillText(p,x,ptsY+22); }c.textAlign='start';
+  c.fillStyle='#0071E3';c.font=`600 ${13*fs}px ${FONT}`;c.fillText('Total Points',LM+4,ptsY-26+4);
+  for(let p=0;p<=100;p+=25){const x=LM+(p/100)*AXW;c.strokeStyle='#0071E3';c.lineWidth=0.8;c.beginPath();c.moveTo(x,ptsY-8);c.lineTo(x,ptsY+8);c.stroke();c.fillStyle='#0071E3';c.font=`${10*fs}px ${FONT}`;c.textAlign='center';c.fillText(p,x,ptsY+22);}c.textAlign='start';
   const ptsC=Math.max(0,Math.min(100,r.totalPts)),ptsX=LM+(ptsC/100)*AXW;
   c.fillStyle='#FF3B30';c.beginPath();c.arc(ptsX,ptsY,8,0,Math.PI*2);c.fill();
   c.fillStyle='#fff';c.font=`bold ${10*fs}px ${FONT}`;c.textAlign='center';c.fillText(Math.round(r.totalPts),ptsX,ptsY+4);c.textAlign='start';
 
-  // LP / Probability
+  // LP + Probability
   const lpMin=-4,lpMax=5;
   c.strokeStyle='#0071E3';c.lineWidth=2.5;c.beginPath();c.moveTo(LM,lpY);c.lineTo(W-RM,lpY);c.stroke();
-  c.fillStyle='#0071E3';c.font=`600 ${12*fs}px ${FONT}`;c.fillText('Linear Predictor',4,lpY+5);
-  for(let v=lpMin;v<=lpMax;v+=1.5){ const x=LM+(v-lpMin)/(lpMax-lpMin)*AXW;c.strokeStyle='#0071E3';c.lineWidth=0.4;c.beginPath();c.moveTo(x,lpY-6);c.lineTo(x,lpY+6);c.stroke();c.fillStyle='#0071E3';c.font=`${9*fs}px ${FONT}`;c.textAlign='center';c.fillText(v.toFixed(1),x,lpY+20); }c.textAlign='start';
+  c.fillStyle='#0071E3';c.font=`600 ${11*fs}px ${FONT}`;c.fillText('Linear Predictor',LM+4,lpY-26+4);
+  for(let v=lpMin;v<=lpMax;v+=1.5){const x=LM+(v-lpMin)/(lpMax-lpMin)*AXW;c.strokeStyle='#0071E3';c.lineWidth=0.4;c.beginPath();c.moveTo(x,lpY-6);c.lineTo(x,lpY+6);c.stroke();c.fillStyle='#0071E3';c.font=`${9*fs}px ${FONT}`;c.textAlign='center';c.fillText(v.toFixed(1),x,lpY+20);}c.textAlign='start';
 
   c.strokeStyle='#1D1D1F';c.lineWidth=3;c.beginPath();c.moveTo(LM,prY);c.lineTo(W-RM,prY);c.stroke();
-  c.fillStyle='#1D1D1F';c.font=`600 ${12*fs}px ${FONT}`;c.fillText('Predicted Probability',4,prY+5);
-  [0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9].forEach(p=>{ const lpv=Math.log(p/(1-p)),x=LM+(lpv-lpMin)/(lpMax-lpMin)*AXW; if(x>=LM&&x<=W-RM){c.strokeStyle='#1D1D1F';c.lineWidth=0.4;c.beginPath();c.moveTo(x,prY-6);c.lineTo(x,prY+6);c.stroke();c.fillStyle='#1D1D1F';c.font=`${9*fs}px ${FONT}`;c.textAlign='center';c.fillText(Math.round(p*100)+'%',x,prY+20);} });c.textAlign='start';
+  c.fillStyle='#1D1D1F';c.font=`600 ${11*fs}px ${FONT}`;c.fillText('Predicted Probability',LM+4,prY-26+4);
+  [0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9].forEach(p=>{const lpv=Math.log(p/(1-p)),x=LM+(lpv-lpMin)/(lpMax-lpMin)*AXW;if(x>=LM&&x<=W-RM){c.strokeStyle='#1D1D1F';c.lineWidth=0.4;c.beginPath();c.moveTo(x,prY-6);c.lineTo(x,prY+6);c.stroke();c.fillStyle='#1D1D1F';c.font=`${9*fs}px ${FONT}`;c.textAlign='center';c.fillText(Math.round(p*100)+'%',x,prY+20);}});c.textAlign='start';
 
   const lpC=Math.max(lpMin,Math.min(lpMax,r.lp)),lpX=LM+(lpC-lpMin)/(lpMax-lpMin)*AXW;
   c.fillStyle='#FF3B30';c.beginPath();c.arc(lpX,lpY,8,0,Math.PI*2);c.fill();c.beginPath();c.arc(lpX,prY,8,0,Math.PI*2);c.fill();
   c.fillStyle='#fff';c.font=`bold ${10*fs}px ${FONT}`;c.textAlign='center';c.fillText(Math.round(r.prob*100)+'%',lpX,prY+4);c.textAlign='start';
 
-  c.setLineDash([3,4]);c.strokeStyle='rgba(255,59,48,0.2)';c.lineWidth=1.5;c.beginPath();c.moveTo(ptsX,axY[0]);c.lineTo(ptsX,prY);c.stroke();c.setLineDash([]);
-  c.fillStyle='#1D1D1F';c.font=`bold ${15*fs}px ${FONT}`;c.textAlign='center';c.fillText('Points',(LM+W-RM)/2,axY[0]-20);c.textAlign='start';
+  // Vertical guide
+  c.setLineDash([3,4]);c.strokeStyle='rgba(255,59,48,0.18)';c.lineWidth=1.5;c.beginPath();c.moveTo(ptsX,axY[0]-28);c.lineTo(ptsX,prY);c.stroke();c.setLineDash([]);
+  c.fillStyle='#1D1D1F';c.font=`bold ${13*fs}px ${FONT}`;c.textAlign='center';c.fillText('Points',(LM+W-RM)/2,axY[0]-30);c.textAlign='start';
 }
 
-function resize(){ displayResult(compute()); }
-window.addEventListener('resize',resize);
-nlrIn.addEventListener('input',()=>{ nlrVal.textContent=parseFloat(nlrIn.value).toFixed(1);updateSlider(nlrIn);displayResult(compute()); });
-nihssIn.addEventListener('input',()=>{ nihssVal.textContent=nihssIn.value;updateSlider(nihssIn);displayResult(compute()); });
+// Events - slider updates don't resize canvas
+nlrIn.addEventListener('input',()=>{nlrVal.textContent=parseFloat(nlrIn.value).toFixed(1);updateSlider(nlrIn);displayResult(compute());});
+nihssIn.addEventListener('input',()=>{nihssVal.textContent=nihssIn.value;updateSlider(nihssIn);displayResult(compute());});
+window.addEventListener('resize',()=>{lastW=0;lastH=0;displayResult(compute());});
 [nlrIn,nihssIn].forEach(updateSlider);
 displayResult(compute());
 </script>
