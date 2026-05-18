@@ -9,7 +9,7 @@
 :root{--text:#1D1D1F;--s:#86868B;--t:#AEAEB2;--blue:#0071E3;--green:#34C759;--orange:#FF9500;--red:#FF3B30;--black:#1D1D1F;--card:rgba(255,255,255,0.85);--border:#E5E5EA}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Times New Roman',Times,Georgia,serif;background:linear-gradient(180deg,#FBFBFD 0%,#F5F5F7 100%);color:var(--text);-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;min-height:100vh}
-.container{width:480px;max-width:96vw;padding:20px 10px}
+.container{width:560px;max-width:96vw;padding:20px 10px}
 .hero{text-align:center;padding:0 10px 4px}
 .hero h1{font-size:1.5rem;font-weight:700;letter-spacing:-0.01em}
 .hero p{font-size:.78rem;color:var(--s);margin-top:1px}
@@ -119,8 +119,8 @@ function calculate(){
   setTimeout(()=>{riskValue.style.color=color;riskCat.textContent=cat;riskCat.style.color=color;},60);
   statPoints.textContent=Math.round(r.totalPts);statLP.textContent=r.lp.toFixed(2);statOR.textContent=Math.exp(r.lp).toFixed(2);
 }
-nlrIn.addEventListener('input',()=>{nlrVal.textContent=parseFloat(nlrIn.value).toFixed(1);updateSlider(nlrIn);});
-nihssIn.addEventListener('input',()=>{nihssVal.textContent=nihssIn.value;updateSlider(nihssIn);});
+nlrIn.addEventListener('input',()=>{nlrVal.textContent=parseFloat(nlrIn.value).toFixed(1);updateSlider(nlrIn);calculate();});
+nihssIn.addEventListener('input',()=>{nihssVal.textContent=nihssIn.value;updateSlider(nihssIn);calculate();});
 [nlrIn,nihssIn].forEach(updateSlider);
 </script>
 </body>
