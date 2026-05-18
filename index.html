@@ -48,7 +48,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .btn{padding:12px 40px;border-radius:26px;font-size:.9rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;background:var(--blue);color:#fff;box-shadow:0 3px 14px rgba(0,113,227,.22);transition:all .2s}
 .btn:hover{box-shadow:0 4px 20px rgba(0,113,227,.3);transform:translateY(-1px)}
 .btn:active{transform:scale(.97)}
-.info-bar{background:rgba(0,113,227,.04);border-radius:10px;padding:8px 12px;font-size:.68rem;color:var(--s);text-align:center;border:1px solid rgba(0,113,227,.06)}
+.info-bar{background:rgba(0,113,227,.04);border-radius:10px;padding:8px 12px;font-size:.65rem;color:var(--s);text-align:center;border:1px solid rgba(0,113,227,.06);line-height:1.5}
 footer{text-align:center;padding:4px 10px 16px;font-size:.6rem;color:var(--t)}
 </style>
 </head>
@@ -90,7 +90,7 @@ footer{text-align:center;padding:4px 10px 16px;font-size:.6rem;color:var(--t)}
     <div class="stat-box"><div class="num">0.820</div><div class="lbl">C-Statistic</div></div></div>
 </div>
 
-<div class="info-bar">logit(P)=−2.79+0.084·NIHSS+0.246·NLR+0.828·Female</div>
+<div class="info-bar">logit(P)=−2.79+0.084·NIHSS+0.246·NLR+0.828·Female &ensp;|&ensp; Risk thresholds based on DCA: &lt;10% Low · 10–33% Moderate · &gt;33% High &ensp;|&ensp; C-statistic 0.820 · N=196</div>
 <footer>Hu J et al. <em>Int J Cerebrovasc Dis</em> 2024;32(10). Research use only.</footer>
 </div>
 
@@ -115,7 +115,7 @@ function calculate(){
   gaugeMarker.style.left=Math.max(2,Math.min(98,pp))+'%';
   const prev=riskValue.textContent==='—'?0:parseFloat(riskValue.textContent);
   animateValue(riskValue,prev,pp,600,v=>v.toFixed(1)+'%');
-  let color,cat;if(pp<10){color='var(--green)';cat='Low Risk';}else if(pp<25){color='var(--orange)';cat='Moderate Risk';}else if(pp<40){color='var(--red)';cat='Elevated Risk';}else{color='var(--black)';cat='High Risk';}
+  let color,cat;if(pp<10){color='var(--green)';cat='Low Risk';}else if(pp<33){color='var(--orange)';cat='Moderate Risk';}else{color='var(--red)';cat='High Risk';}
   setTimeout(()=>{riskValue.style.color=color;riskCat.textContent=cat;riskCat.style.color=color;},60);
   statPoints.textContent=Math.round(r.totalPts);statLP.textContent=r.lp.toFixed(2);statOR.textContent=Math.exp(r.lp).toFixed(2);
 }
