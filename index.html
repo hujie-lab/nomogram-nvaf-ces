@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Nomogram — NVAF-Related Acute CES Short-Term Outcome Prediction</title>
+<style>
+  :root { --bg: #f8f9fa; --card: #fff; --accent: #1a5276; --accent2: #2980b9;
+    --text: #2c3e50; --muted: #7f8c8d; --risk-low: #27ae60; --risk-mod: #f39c12; --risk-high: #e74c3c;
+    --border: #dee2e6; --shadow: 0 2px 12px rgba(0,0,0,.08); --radius: 10px; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg);
+    color: var(--text); line-height: 1.6; min-height: 100vh; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+  header { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+    padding: 28px 32px; border-radius: var(--radius); margin-bottom: 24px; box-shadow: var(--shadow); }
+  header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+  header p { font-size: .9rem; opacity: .9; }
+  header .citation { font-size: .78rem; opacity: .75; margin-top: 8px; font-style: italic; }
+
+  .main-grid { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+  @media (max-width: 860px) { .main-grid { grid-template-columns: 1fr; } }
+
+  .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 24px; border: 1px solid var(--border); }
+  .card h2 { font-size: 1.15rem; color: var(--accent); margin-bottom: 16px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--accent2); }
+
+  .input-group { margin-bottom: 18px; }
+  .input-group label { display: flex; justify-content: space-between; align-items: center;
+    font-weight: 600; font-size: .9rem; margin-bottom: 6px; }
+  .input-group label .val { color: var(--accent2); font-size: 1.05rem; }
+  input[type=range] { width: 100%; accent-color: var(--accent2); height: 6px; }
+  .range-labels { display: flex; justify-content: space-between; font-size: .75rem; color: var(--muted); }
+
+  .radio-group { display: flex; gap: 12px; }
+  .radio-group label { display: flex; align-items: center; gap: 6px; cursor: pointer;
+    padding: 10px 20px; border: 2px solid var(--border); border-radius: 8px; font-weight: 500;
+    transition: all .2s; flex: 1; justify-content: center; }
+  .radio-group label:hover { border-color: var(--accent2); }
+  .radio-group input[type=radio]:checked + span { color: var(--accent2); }
+  .radio-group label:has(input:checked) { border-color: var(--accent2); background: #eaf2f8; }
+  .radio-group input[type=radio] { accent-color: var(--accent2); }
+
+  .result-box { text-align: center; padding: 20px; border-radius: var(--radius); margin-top: 12px; }
+  .result-box .prob { font-size: 3rem; font-weight: 800; }
+  .result-box .label { font-size: .85rem; color: var(--muted); margin-top: 4px; }
+  .risk-low-bg { background: #eafaf1; } .risk-low-bg .prob { color: var(--risk-low); }
+  .risk-mod-bg { background: #fef9e7; } .risk-mod-bg .prob { color: var(--risk-mod); }
+  .risk-high-bg { background: #fdedec; } .risk-high-bg .prob { color: var(--risk-high); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .stat-item { text-align: center; padding: 12px 8px; background: var(--bg); border-radius: 8px; }
+  .stat-item .num { font-size: 1.3rem; font-weight: 700; color: var(--accent2); }
+  .stat-item .lbl { font-size: .72rem; color: var(--muted); }
+
+  canvas { width: 100%; height: auto; display: block; }
+
+  .info-box { margin-top: 16px; padding: 14px; background: #eaf2f8; border-radius: 8px;
+    font-size: .8rem; color: var(--accent); border-left: 4px solid var(--accent2); }
+
+  footer { text-align: center; padding: 20px; font-size: .75rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Dynamic Nomogram: Predicting Short-Term Poor Outcome in NVAF-Related Acute CES</h1>
+  <p>Non-valvular Atrial Fibrillation (NVAF) · Acute Cardioembolic Stroke (CES) · 14-Day mRS >2</p>
+  <p class="citation">Hu J, Wang L, Chen X, He X, Wu J. Int J Cerebrovasc Dis 2024; 32(10). C-statistic: 0.820 (95% CI 0.761–0.879)</p>
+</header>
+
+<div class="main-grid">
+  <div class="card">
+    <h2>Interactive Nomogram</h2>
+    <canvas id="nomogram" width="760" height="580"></canvas>
+  </div>
+
+  <div>
+    <div class="card">
+      <h2>Patient Parameters</h2>
+
+      <div class="input-group">
+        <label>Neutrophil-to-Lymphocyte Ratio (NLR) <span class="val" id="nlrVal">4.3</span></label>
+        <input type="range" id="nlrSlider" min="0.5" max="30" step="0.1" value="4.3">
+        <div class="range-labels"><span>0.5</span><span>15</span><span>30</span></div>
+      </div>
+
+      <div class="input-group">
+        <label>Baseline NIHSS Score <span class="val" id="nihssVal">10</span></label>
+        <input type="range" id="nihssSlider" min="0" max="35" step="1" value="10">
+        <div class="range-labels"><span>0</span><span>18</span><span>35</span></div>
+      </div>
+
+      <div class="input-group">
+        <label>Sex</label>
+        <div class="radio-group">
+          <label><input type="radio" name="sex" value="0" checked> Male</label>
+          <label><input type="radio" name="sex" value="1"> Female</label>
+        </div>
+      </div>
+
+      <div class="result-box risk-mod-bg" id="resultBox">
+        <div class="prob" id="probDisplay">50.0%</div>
+        <div class="label">Predicted Probability of Poor Outcome (mRS >2 at Day 14)</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-item"><div class="num" id="pointsDisplay">85</div><div class="lbl">Total Points</div></div>
+        <div class="stat-item"><div class="num" id="lpDisplay">0.00</div><div class="lbl">Linear Predictor</div></div>
+        <div class="stat-item"><div class="num" id="riskDisplay">Moderate</div><div class="lbl">Risk Category</div></div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>Model:</strong> logit(P) = −2.7865 + 0.2461 × NLR + 0.0843 × NIHSS + 0.8277 × Female<br>
+      <strong>Risk:</strong> &lt;30% Low · 30–60% Moderate · &gt;60% High<br>
+      <strong>N = 196</strong> (109 female, median age 80). C-statistic 0.820. Hosmer-Lemeshow P &gt; 0.05.
+    </div>
+  </div>
+</div>
+
+<footer>
+  Reference: Hu J, Wang L, Chen XY, He X, Wu JC. Nomogram for predicting short-term outcome in NVAF-related acute CES.
+  <em>Int J Cerebrovasc Dis</em> 2024; 32(10). DOI: 10.3760/cma.j.issn.1673-4165.2024.10.002<br>
+  This tool is for research purposes only and does not constitute medical advice.
+</footer>
+</div>
+
+<script>
+// Published model coefficients (Hu et al., IJCVD 2024)
+const B0 = -2.7865;
+const B_NLR = Math.log(1.279);    // 0.2461
+const B_NIHSS = Math.log(1.088);  // 0.0843
+const B_FEMALE = Math.log(2.288); // 0.8277
+
+// Nomogram scaling (100-point system)
+const NLR_RANGE = 30;    // display range for NLR
+const NIHSS_RANGE = 35;  // display range for NIHSS
+const TOTAL_BETA = B_NLR * 30 + B_NIHSS * 35 + B_FEMALE * 1;
+const PTS_NLR = 100 * B_NLR / TOTAL_BETA;
+const PTS_NIHSS = 100 * B_NIHSS / TOTAL_BETA;
+const PTS_FEMALE = 100 * B_FEMALE / TOTAL_BETA;
+
+// DOM
+const nlrSlider = document.getElementById('nlrSlider');
+const nihssSlider = document.getElementById('nihssSlider');
+const nlrVal = document.getElementById('nlrVal');
+const nihssVal = document.getElementById('nihssVal');
+const probDisplay = document.getElementById('probDisplay');
+const pointsDisplay = document.getElementById('pointsDisplay');
+const lpDisplay = document.getElementById('lpDisplay');
+const riskDisplay = document.getElementById('riskDisplay');
+const resultBox = document.getElementById('resultBox');
+const canvas = document.getElementById('nomogram');
+const ctx = canvas.getContext('2d');
+
+function getSex() {
+  return document.querySelector('input[name="sex"]:checked').value === '1' ? 1 : 0;
+}
+
+function calculate() {
+  const nlr = parseFloat(nlrSlider.value);
+  const nihss = parseInt(nihssSlider.value);
+  const sex = getSex();
+
+  const lp = B0 + B_NLR * nlr + B_NIHSS * nihss + B_FEMALE * sex;
+  const prob = 1 / (1 + Math.exp(-lp));
+  const pointsNLR = nlr * PTS_NLR;
+  const pointsNIHSS = nihss * PTS_NIHSS;
+  const pointsSex = sex * PTS_FEMALE;
+  const totalPts = pointsNLR + pointsNIHSS + pointsSex;
+
+  return { nlr, nihss, sex, lp, prob, totalPts, pointsNLR, pointsNIHSS, pointsSex };
+}
+
+function updateDisplay(r) {
+  nlrVal.textContent = r.nlr.toFixed(1);
+  nihssVal.textContent = r.nihss;
+  probDisplay.textContent = (r.prob * 100).toFixed(1) + '%';
+  pointsDisplay.textContent = Math.round(r.totalPts);
+  lpDisplay.textContent = r.lp.toFixed(2);
+
+  let riskCat, riskClass;
+  if (r.prob < 0.30) { riskCat = 'Low Risk'; riskClass = 'risk-low-bg'; }
+  else if (r.prob <= 0.60) { riskCat = 'Moderate'; riskClass = 'risk-mod-bg'; }
+  else { riskCat = 'High Risk'; riskClass = 'risk-high-bg'; }
+  riskDisplay.textContent = riskCat;
+  resultBox.className = 'result-box ' + riskClass;
+
+  drawNomogram(r);
+}
+
+function drawNomogram(r) {
+  const W = 760, H = 580;
+  ctx.clearRect(0, 0, W, H);
+
+  const LM = 80, RM = 60, TOP = 35;
+  const AXIS_W = W - LM - RM;
+
+  // Variable axes
+  const axes = [
+    { y: TOP + 20, label: 'NLR', min: 0.5, max: 30, val: r.nlr, ptsPerUnit: PTS_NLR,
+      ticks: [0.5, 2, 4, 6, 8, 10, 14, 20, 30], unit: '' },
+    { y: TOP + 110, label: 'Baseline NIHSS', min: 0, max: 35, val: r.nihss, ptsPerUnit: PTS_NIHSS,
+      ticks: [0, 5, 10, 15, 20, 25, 30, 35], unit: '' },
+    { y: TOP + 200, label: 'Sex', min: 0, max: 1, val: r.sex, ptsPerUnit: PTS_FEMALE,
+      ticks: [0, 1], labels: ['Male', 'Female'], unit: '' }
+  ];
+
+  // Draw axes
+  axes.forEach(ax => {
+    const y = ax.y;
+    // Axis line
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(LM, y); ctx.lineTo(W - RM, y); ctx.stroke();
+
+    // Axis label
+    ctx.fillStyle = '#2c3e50'; ctx.font = 'bold 14px Segoe UI, sans-serif';
+    ctx.fillText(ax.label, 10, y + 5);
+
+    // Ticks
+    const displayLabels = ax.labels || ax.ticks.map(t => t.toString());
+    ax.ticks.forEach((t, i) => {
+      const x = LM + (t - ax.min) / (ax.max - ax.min) * AXIS_W;
+      ctx.strokeStyle = '#666'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, y - 8); ctx.lineTo(x, y + 8); ctx.stroke();
+      ctx.fillStyle = '#555'; ctx.font = '11px Segoe UI, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(displayLabels[i], x, y + 24);
+    });
+
+    // Point scale (top ticks)
+    if (ax.min < ax.max) {
+      for (let v = ax.min; v <= ax.max; v += (ax.max - ax.min) / 20) {
+        const x = LM + (v - ax.min) / (ax.max - ax.min) * AXIS_W;
+        const pts = v * ax.ptsPerUnit;
+        ctx.fillStyle = '#aaa'; ctx.font = '8px monospace';
+        ctx.textAlign = 'center';
+        if (v % Math.ceil((ax.max-ax.min)/10) < 0.01 || v === ax.min || v === ax.max) {
+          ctx.fillText(Math.round(pts), x, y - 14);
+        }
+      }
+    }
+
+    // Current value marker
+    const vx = LM + (ax.val - ax.min) / (ax.max - ax.min) * AXIS_W;
+    ctx.fillStyle = '#e74c3c';
+    ctx.beginPath(); ctx.arc(vx, y, 7, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 9px monospace'; ctx.textAlign = 'center';
+    ctx.fillText(ax.val, vx, y + 4);
+  });
+
+  // Total Points axis
+  const ptsY = TOP + 290;
+  ctx.strokeStyle = '#1a5276'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(LM, ptsY); ctx.lineTo(W - RM, ptsY); ctx.stroke();
+  ctx.fillStyle = '#1a5276'; ctx.font = 'bold 14px Segoe UI, sans-serif';
+  ctx.fillText('Total Points', 10, ptsY + 5);
+
+  // Ticks for total points
+  for (let pts = 0; pts <= 100; pts += 10) {
+    const x = LM + (pts / 100) * AXIS_W;
+    ctx.strokeStyle = '#1a5276'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, ptsY - 8); ctx.lineTo(x, ptsY + 8); ctx.stroke();
+    ctx.fillStyle = '#1a5276'; ctx.font = '10px monospace'; ctx.textAlign = 'center';
+    ctx.fillText(pts, x, ptsY + 22);
+  }
+
+  // Current total points
+  const ptsX = LM + Math.min(100, Math.max(0, r.totalPts)) / 100 * AXIS_W;
+  ctx.fillStyle = '#e74c3c';
+  ctx.beginPath(); ctx.arc(ptsX, ptsY, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(Math.round(r.totalPts), ptsX, ptsY + 4);
+
+  // Linear Predictor axis
+  const lpY = TOP + 370;
+  const lpMin = -4, lpMax = 5;
+  ctx.strokeStyle = '#2980b9'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(LM, lpY); ctx.lineTo(W - RM, lpY); ctx.stroke();
+  ctx.fillStyle = '#2980b9'; ctx.font = 'bold 14px Segoe UI, sans-serif';
+  ctx.fillText('Linear Predictor', 10, lpY + 5);
+
+  for (let v = lpMin; v <= lpMax; v += 0.5) {
+    const x = LM + (v - lpMin) / (lpMax - lpMin) * AXIS_W;
+    ctx.strokeStyle = '#2980b9'; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(x, lpY - 6); ctx.lineTo(x, lpY + 6); ctx.stroke();
+    ctx.fillStyle = '#2980b9'; ctx.font = '9px monospace'; ctx.textAlign = 'center';
+    ctx.fillText(v.toFixed(1), x, lpY + 20);
+  }
+
+  const lpX = LM + Math.min(lpMax, Math.max(lpMin, r.lp - lpMin)) / (lpMax - lpMin) * AXIS_W;
+  ctx.fillStyle = '#e74c3c';
+  ctx.beginPath(); ctx.arc(lpX, lpY, 8, 0, Math.PI * 2); ctx.fill();
+
+  // Probability axis
+  const probY = TOP + 440;
+  ctx.strokeStyle = '#c0392b'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(LM, probY); ctx.lineTo(W - RM, probY); ctx.stroke();
+  ctx.fillStyle = '#c0392b'; ctx.font = 'bold 14px Segoe UI, sans-serif';
+  ctx.fillText('Predicted Probability', 10, probY + 5);
+
+  const probs = [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95];
+  probs.forEach(p => {
+    const lp_v = Math.log(p / (1 - p));
+    const x = LM + (lp_v - lpMin) / (lpMax - lpMin) * AXIS_W;
+    if (x >= LM && x <= W - RM) {
+      ctx.strokeStyle = '#c0392b'; ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(x, probY - 6); ctx.lineTo(x, probY + 6); ctx.stroke();
+      ctx.fillStyle = '#c0392b'; ctx.font = '9px monospace'; ctx.textAlign = 'center';
+      ctx.fillText((p*100).toFixed(0) + '%', x, probY + 20);
+    }
+  });
+
+  const probX = LM + Math.min(lpMax, Math.max(lpMin, r.lp - lpMin)) / (lpMax - lpMin) * AXIS_W;
+  ctx.fillStyle = '#e74c3c';
+  ctx.beginPath(); ctx.arc(probX, probY, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center';
+  ctx.fillText((r.prob*100).toFixed(0) + '%', probX, probY + 3);
+
+  // Vertical guiding dashed lines connecting the axes
+  ctx.setLineDash([4, 6]);
+  ctx.strokeStyle = 'rgba(231, 76, 60, 0.35)'; ctx.lineWidth = 1.5;
+  const guideX = ptsX;
+  ctx.beginPath(); ctx.moveTo(guideX, axes[0].y); ctx.lineTo(guideX, probY); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Title
+  ctx.fillStyle = '#1a5276'; ctx.font = 'bold 16px Segoe UI, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Points', LM + AXIS_W/2, TOP);
+}
+
+// Initial draw & event listeners
+function update() { updateDisplay(calculate()); }
+nlrSlider.addEventListener('input', update);
+nihssSlider.addEventListener('input', update);
+document.querySelectorAll('input[name="sex"]').forEach(r => r.addEventListener('change', update));
+update();
+</script>
+</body>
+</html>
