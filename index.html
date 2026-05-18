@@ -3,230 +3,142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Dynamic Nomogram — NVAF-Related CES Outcome Prediction</title>
+<title>NVAF-CES Outcome Prediction Calculator</title>
 <style>
-:root{--bg-start:#FBFBFD;--bg-end:#F5F5F7;--text:#1D1D1F;--s:#86868B;--t:#AEAEB2;--blue:#0071E3;--green:#34C759;--orange:#FF9500;--red:#FF3B30;--black:#1D1D1F;--card:rgba(255,255,255,0.85);--border:#E5E5EA}
+:root{--text:#1D1D1F;--s:#86868B;--t:#AEAEB2;--blue:#0071E3;--green:#34C759;--orange:#FF9500;--red:#FF3B30;--black:#1D1D1F;--card:rgba(255,255,255,0.85);--border:#E5E5EA}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Times New Roman',Times,Georgia,serif;background:linear-gradient(180deg,var(--bg-start) 0%,var(--bg-end) 100%);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
-.hero{text-align:center;padding:40px 20px 6px;animation:heroIn 0.8s ease-out}
-.hero h1{font-size:2rem;font-weight:700}
+body{font-family:'Times New Roman',Times,Georgia,serif;background:linear-gradient(180deg,#FBFBFD 0%,#F5F5F7 100%);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center}
+.hero{text-align:center;padding:0 20px 8px}
+.hero h1{font-size:2rem;font-weight:700;letter-spacing:-0.02em}
 .hero p{font-size:.9rem;color:var(--s);margin-top:2px}
-.hero .citation{font-size:.7rem;color:var(--t);margin-top:2px;font-style:italic}
-@keyframes heroIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
-.container{max-width:960px;margin:0 auto;padding:0 20px 30px}
-.card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:20px;padding:22px 26px;margin-bottom:18px;border:1px solid rgba(0,0,0,.06);box-shadow:0 2px 24px rgba(0,0,0,.04)}
-.card.anim-1{animation:cardIn .6s ease-out .1s both}
-.card.anim-2{animation:cardIn .6s ease-out .2s both}
-.card.anim-3{animation:cardIn .6s ease-out .3s both}
+.hero .citation{font-size:.72rem;color:var(--t);margin-top:2px;font-style:italic}
+.container{width:680px;max-width:100%;padding:30px 20px}
+.card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:20px;padding:26px 28px;margin-bottom:16px;border:1px solid rgba(0,0,0,.06);box-shadow:0 2px 24px rgba(0,0,0,.04);animation:cardIn .6s ease-out both}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.card h2{font-size:1.1rem;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.card h2{font-size:1.1rem;font-weight:600;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .dot-blue{background:var(--blue)}.dot-green{background:var(--green)}
 
-.top-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:720px){.top-row{grid-template-columns:1fr}}
-.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
 @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
-.field label{display:flex;justify-content:space-between;align-items:baseline;font-size:.82rem;font-weight:600;margin-bottom:4px}
-.field label .val{font-size:1rem;color:var(--blue);font-weight:700}
+.field label{display:flex;justify-content:space-between;align-items:baseline;font-size:.85rem;font-weight:600;margin-bottom:5px}
+.field label .val{font-size:1.1rem;color:var(--blue);font-weight:700}
 .segmented{display:flex;border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.segmented .seg-btn{flex:1;text-align:center;padding:9px 0;cursor:pointer;font-size:.88rem;font-weight:500;color:var(--s);background:0 0;transition:all .2s;border:none;font-family:inherit;border-right:1px solid var(--border)}
+.segmented .seg-btn{flex:1;text-align:center;padding:10px 0;cursor:pointer;font-size:.9rem;font-weight:500;color:var(--s);background:0 0;border:none;font-family:inherit;border-right:1px solid var(--border);transition:all .2s}
 .segmented .seg-btn:last-child{border-right:none}
 .segmented .seg-btn:hover{background:rgba(0,113,227,.04)}
 .segmented .seg-btn.active{background:var(--blue);color:#fff;font-weight:600}
 input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;background:linear-gradient(90deg,var(--blue) var(--fill,0%),var(--border) var(--fill,0%));outline:0}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--blue);cursor:pointer;box-shadow:0 2px 6px rgba(0,113,227,.2)}
-.range-labels{display:flex;justify-content:space-between;font-size:.65rem;color:var(--t);margin-top:1px}
+.range-labels{display:flex;justify-content:space-between;font-size:.65rem;color:var(--t);margin-top:2px}
 
-.gauge-wrap{position:relative;width:100%;margin:8px 0 14px}
-.gauge-bar{width:100%;height:18px;border-radius:9px;background:linear-gradient(90deg,var(--green) 0%,var(--orange) 35%,var(--red) 70%,var(--black) 100%)}
-.gauge-marker{position:absolute;top:-5px;width:5px;height:28px;border-radius:2px;background:var(--black);transform:translateX(-50%);transition:left .6s cubic-bezier(.25,.1,.25,1)}
-.gauge-labels{display:flex;justify-content:space-between;font-size:.65rem;color:var(--s);margin-top:4px}
+.result-section{display:none}
+.result-section.show{display:block;animation:pop .5s ease-out}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.gauge-wrap{position:relative;width:100%;margin:10px 0 16px}
+.gauge-bar{width:100%;height:20px;border-radius:10px;background:linear-gradient(90deg,var(--green) 0%,var(--orange) 35%,var(--red) 70%,var(--black) 100%)}
+.gauge-marker{position:absolute;top:-6px;width:5px;height:32px;border-radius:2px;background:var(--black);transform:translateX(-50%);transition:left .6s cubic-bezier(.25,.1,.25,1)}
+.gauge-labels{display:flex;justify-content:space-between;font-size:.68rem;color:var(--s);margin-top:5px;padding:0 2px}
 .risk-display{text-align:center}
-.risk-value{font-size:2.6rem;font-weight:800;transition:color .5s}
-.risk-category{font-size:.9rem;font-weight:600;margin-top:1px}
-.risk-detail{font-size:.72rem;color:var(--s);margin-top:1px}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
-.stat-box{background:#FBFBFD;border-radius:10px;padding:8px 6px;text-align:center;border:1px solid #F0F0F5}
-.stat-box .num{font-size:1.05rem;font-weight:700}
-.stat-box .lbl{font-size:.58rem;color:var(--t);margin-top:1px;text-transform:uppercase;letter-spacing:.03em}
+.risk-value{font-size:3rem;font-weight:800;letter-spacing:-.03em;transition:color .5s}
+.risk-category{font-size:.95rem;font-weight:600;margin-top:2px}
+.risk-detail{font-size:.75rem;color:var(--s);margin-top:2px}
 
-/* === PURE HTML NOMOGRAM === */
-.nomo-wrap{position:relative;margin-top:4px}
-.nomo-row{position:relative;height:44px;margin-bottom:2px}
-.nomo-row .nl{position:absolute;left:4px;top:4px;font-size:14px;font-weight:600;color:var(--text);z-index:3}
-.nomo-row .pts{position:absolute;left:5px;right:5px;top:18px;display:flex;justify-content:space-between;font-size:9px;color:var(--t);z-index:1}
-.nomo-row .pts span{flex:1;text-align:center}
-.nomo-row .bar{position:absolute;left:90px;right:45px;top:26px;height:3px;background:var(--text);border-radius:2px}
-.nomo-row .dot{position:absolute;top:20px;width:14px;height:14px;border-radius:50%;background:var(--red);z-index:4;transform:translateX(-50%);transition:left .4s ease-out;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-.nomo-row .dot-val{position:absolute;top:0;font-size:11px;font-weight:700;color:var(--red);z-index:5;transform:translateX(-50%);transition:left .4s ease-out;white-space:nowrap}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.stat-box{background:#FBFBFD;border-radius:10px;padding:10px 8px;text-align:center;border:1px solid #F0F0F5}
+.stat-box .num{font-size:1.2rem;font-weight:700}
+.stat-box .lbl{font-size:.6rem;color:var(--t);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
 
-.sum-row{position:relative;height:38px;margin-bottom:1px}
-.sum-row .sl{position:absolute;left:4px;top:8px;font-size:13px;font-weight:600;color:var(--blue);z-index:2}
-.sum-row .sbar{position:absolute;left:90px;right:45px;top:16px;height:5px;border-radius:3px}
-.sum-row .sdot{position:absolute;top:8px;width:16px;height:16px;border-radius:50%;background:var(--red);z-index:4;transform:translateX(-50%);transition:left .4s ease-out;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.btn-row{text-align:center;margin-top:14px}
+.btn{padding:14px 52px;border-radius:30px;font-size:1rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;background:var(--blue);color:#fff;box-shadow:0 4px 18px rgba(0,113,227,.25);transition:all .2s}
+.btn:hover{box-shadow:0 6px 26px rgba(0,113,227,.35);transform:translateY(-1px)}
+.btn:active{transform:scale(.97)}
 
-.pts-title{text-align:center;font-size:11px;color:var(--t);margin:2px 0 6px}
-
-.info-bar{background:rgba(0,113,227,.04);border-radius:12px;padding:10px 14px;font-size:.75rem;color:var(--s);margin-top:14px;text-align:center;border:1px solid rgba(0,113,227,.08)}
-footer{text-align:center;padding:12px 20px 28px;font-size:.68rem;color:var(--t);max-width:960px;margin:0 auto}
+.info-bar{background:rgba(0,113,227,.04);border-radius:12px;padding:12px 16px;font-size:.75rem;color:var(--s);text-align:center;border:1px solid rgba(0,113,227,.08);margin-top:8px}
+footer{text-align:center;padding:8px 20px 24px;font-size:.65rem;color:var(--t)}
 </style>
 </head>
 <body>
-
-<div class="hero">
-  <h1>NVAF-CES Outcome Prediction Nomogram</h1>
-  <p>Non-valvular Atrial Fibrillation · Acute Cardioembolic Stroke · 14-Day Functional Outcome</p>
-  <p class="citation">Hu J et al. <em>Int J Cerebrovasc Dis</em> 2024;32(10). C-statistic 0.820 · N=196</p>
-</div>
-
 <div class="container">
 
-<div class="top-row">
-  <div class="card anim-1">
-    <h2><span class="dot dot-blue"></span> Patient Parameters</h2>
-    <div class="form-grid">
-      <div class="field"><label>Sex</label>
-        <div class="segmented" id="sexGroup">
-          <button class="seg-btn active" data-val="0" onclick="setSex(0,this)">Male</button>
-          <button class="seg-btn" data-val="1" onclick="setSex(1,this)">Female</button>
-        </div></div>
-      <div class="field"><label>NIHSS <span class="val" id="nihssVal">10</span></label>
-        <input type="range" id="nihssIn" min="0" max="35" value="10" step="1">
-        <div class="range-labels"><span>0</span><span>18</span><span>35</span></div></div>
-      <div class="field"><label>NLR <span class="val" id="nlrVal">4.3</span></label>
-        <input type="range" id="nlrIn" min="0.5" max="30" value="4.3" step="0.1">
-        <div class="range-labels"><span>0.5</span><span>15</span><span>30</span></div></div>
-    </div>
-  </div>
-
-  <div class="card anim-2">
-    <h2><span class="dot dot-green"></span> Predicted Outcome</h2>
-    <div class="gauge-wrap"><div class="gauge-bar"></div><div class="gauge-marker" id="gaugeMarker" style="left:50%"></div>
-      <div class="gauge-labels"><span>Low</span><span>10%</span><span>25%</span><span>40%+</span><span>High</span></div></div>
-    <div class="risk-display"><div class="risk-value" id="riskValue">50.0%</div>
-      <div class="risk-category" id="riskCat">Moderate Risk</div>
-      <div class="risk-detail">Poor outcome (mRS &gt;2 Day 14)</div></div>
-    <div class="stats-row"><div class="stat-box"><div class="num" id="statPoints">—</div><div class="lbl">Points</div></div>
-      <div class="stat-box"><div class="num" id="statLP">—</div><div class="lbl">Linear Pred.</div></div>
-      <div class="stat-box"><div class="num" id="statOR">—</div><div class="lbl">Odds Ratio</div></div>
-      <div class="stat-box"><div class="num">0.820</div><div class="lbl">C-Statistic</div></div></div>
-  </div>
+<div class="hero">
+  <h1>NVAF-CES Outcome Prediction</h1>
+  <p>Non-valvular Atrial Fibrillation · Acute Cardioembolic Stroke · 14-Day Functional Outcome</p>
+  <p class="citation">Hu J, Wang L, Chen XY, He X, Wu JC. <em>Int J Cerebrovasc Dis</em> 2024;32(10). C-statistic 0.820 · N=196 · Bootstrap validated</p>
 </div>
 
-<!-- PURE HTML NOMOGRAM -->
-<div class="card anim-3">
-  <h2><span class="dot dot-blue"></span> Dynamic Nomogram</h2>
-  <div class="nomo-wrap">
-
-    <!-- NIHSS -->
-    <div class="nomo-row"><div class="nl">Baseline NIHSS</div>
-      <div class="pts" id="ptsNihss"></div><div class="bar"></div>
-      <div class="dot" id="dotNihss"></div><div class="dot-val" id="valNihss">10</div></div>
-
-    <!-- NLR -->
-    <div class="nomo-row"><div class="nl">NLR</div>
-      <div class="pts" id="ptsNlr"></div><div class="bar"></div>
-      <div class="dot" id="dotNlr"></div><div class="dot-val" id="valNlr">4.3</div></div>
-
-    <!-- Sex -->
-    <div class="nomo-row"><div class="nl">Sex</div>
-      <div class="pts" id="ptsSex"></div><div class="bar"></div>
-      <div class="dot" id="dotSex"></div><div class="dot-val" id="valSex">Male</div></div>
-
-    <div class="pts-title">Points</div>
-
-    <!-- Total Points -->
-    <div class="sum-row"><div class="sl">Total Points</div>
-      <div class="sbar" style="background:var(--blue)"></div>
-      <div class="sdot" id="dotPts"></div></div>
-
-    <!-- Linear Predictor -->
-    <div class="sum-row"><div class="sl">Linear Predictor</div>
-      <div class="sbar" style="background:var(--blue)"></div>
-      <div class="sdot" id="dotLP"></div></div>
-
-    <!-- Probability -->
-    <div class="sum-row"><div class="sl" style="color:var(--text)">Predicted Probability</div>
-      <div class="sbar" style="background:var(--text)"></div>
-      <div class="sdot" id="dotProb"></div></div>
+<div class="card" style="animation-delay:.1s">
+  <h2><span class="dot dot-blue"></span> Patient Parameters</h2>
+  <div class="form-grid">
+    <div class="field"><label>Sex</label>
+      <div class="segmented" id="sexGroup">
+        <button class="seg-btn active" data-val="0" onclick="setSex(0,this)">Male</button>
+        <button class="seg-btn" data-val="1" onclick="setSex(1,this)">Female</button>
+      </div></div>
+    <div class="field"><label>Baseline NIHSS <span class="val" id="nihssVal">10</span></label>
+      <input type="range" id="nihssIn" min="0" max="35" value="10" step="1">
+      <div class="range-labels"><span>0</span><span>18</span><span>35</span></div></div>
+    <div class="field"><label>NLR <span class="val" id="nlrVal">4.3</span></label>
+      <input type="range" id="nlrIn" min="0.5" max="30" value="4.3" step="0.1">
+      <div class="range-labels"><span>0.5</span><span>15</span><span>30</span></div></div>
   </div>
+  <div class="btn-row"><button class="btn" onclick="calculate()">Calculate Risk</button></div>
 </div>
 
-<div class="info-bar"><strong>Model:</strong> logit(P)=−2.79+0.084×NIHSS+0.246×NLR+0.828×Female &ensp;|&ensp; &lt;10% Low &middot; 10–25% Moderate &middot; 25–40% Elevated &middot; &gt;40% High &ensp;|&ensp; N=196 &middot; C-statistic 0.820</div>
+<div class="card result-section" id="resultCard" style="animation-delay:.2s">
+  <h2><span class="dot dot-green"></span> Predicted Outcome</h2>
+  <div class="gauge-wrap"><div class="gauge-bar"></div><div class="gauge-marker" id="gaugeMarker" style="left:50%"></div>
+    <div class="gauge-labels"><span>Low Risk</span><span>10%</span><span>25%</span><span>40%+</span><span>High Risk</span></div></div>
+  <div class="risk-display"><div class="risk-value" id="riskValue">—</div>
+    <div class="risk-category" id="riskCat"></div>
+    <div class="risk-detail">Predicted probability of poor functional outcome (mRS &gt; 2 at Day 14)</div></div>
+  <div class="stats-row"><div class="stat-box"><div class="num" id="statPoints">—</div><div class="lbl">Points</div></div>
+    <div class="stat-box"><div class="num" id="statLP">—</div><div class="lbl">Linear Predictor</div></div>
+    <div class="stat-box"><div class="num" id="statOR">—</div><div class="lbl">Odds Ratio</div></div>
+    <div class="stat-box"><div class="num">0.820</div><div class="lbl">C-Statistic</div></div></div>
 </div>
-<footer>Hu J et al. <em>Int J Cerebrovasc Dis</em> 2024;32(10). · Research use only.</footer>
+
+<div class="info-bar"><strong>Model:</strong> logit(P)=−2.79+0.084×NIHSS+0.246×NLR+0.828×Female &ensp;|&ensp; &lt;10% Low · 10–25% Moderate · 25–40% Elevated · &gt;40% High</div>
+<footer>Hu J et al. <em>Int J Cerebrovasc Dis</em> 2024;32(10). · Research use only. Not medical advice.</footer>
+
+</div>
 
 <script>
 const B0=-2.7865,B_NLR=0.246079,B_NIHSS=0.084341,B_FEMALE=0.827678;
 const SCALE_NLR=30,SCALE_NIHSS=35,TOTAL_BETA=B_NLR*SCALE_NLR+B_NIHSS*SCALE_NIHSS+B_FEMALE;
 const PTS_NLR=100*B_NLR/TOTAL_BETA,PTS_NIHSS=100*B_NIHSS/TOTAL_BETA,PTS_FEMALE=100*B_FEMALE/TOTAL_BETA;
 let currentSex=0;
-function setSex(v,btn){currentSex=v;document.querySelectorAll('#sexGroup .seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateAll();}
+function setSex(v,btn){currentSex=v;document.querySelectorAll('#sexGroup .seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+
 const nlrIn=document.getElementById('nlrIn'),nihssIn=document.getElementById('nihssIn');
 const nlrVal=document.getElementById('nlrVal'),nihssVal=document.getElementById('nihssVal');
+const resultCard=document.getElementById('resultCard');
 const riskValue=document.getElementById('riskValue'),riskCat=document.getElementById('riskCat');
 const gaugeMarker=document.getElementById('gaugeMarker');
 const statPoints=document.getElementById('statPoints'),statLP=document.getElementById('statLP'),statOR=document.getElementById('statOR');
+
 function updateSlider(s){const mn=+s.min,mx=+s.max,v=+s.value;s.style.setProperty('--fill',((v-mn)/(mx-mn)*100)+'%');}
 function compute(){const nlr=+nlrIn.value,nihss=+nihssIn.value,sex=currentSex;const lp=B0+B_NLR*nlr+B_NIHSS*nihss+B_FEMALE*sex,prob=1/(1+Math.exp(-lp));return {nlr,nihss,sex,lp,prob,totalPts:nlr*PTS_NLR+nihss*PTS_NIHSS+sex*PTS_FEMALE};}
 
-const LM=90,RM=45;
-function xPos(min,max,val){const p=Math.max(0,Math.min(100,(val-min)/(max-min)*100));return`calc(${LM}px + ${p}% * (100% - ${LM+RM}px))`;}
-function xPosPct(p){return`calc(${LM}px + ${p}% * (100% - ${LM+RM}px))`;}
+function animateValue(el,start,end,dur,fmt){const t0=performance.now();function step(ts){const p=Math.min((ts-t0)/dur,1),e=1-Math.pow(1-p,3);el.textContent=fmt(start+(end-start)*e);if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
 
-// Build static ticks once
-(function initTicks(){
-  function buildRow(ptsId,min,max,ppu,step){
-    const el=document.getElementById(ptsId);el.innerHTML='';
-    for(let v=min;v<=max;v+=step){
-      const span=document.createElement('span');span.textContent=v%Math.floor(step*5)<step?Math.round(v*ppu):'';el.appendChild(span);
-    }
-  }
-  // Tick markers for axes - placed as inline spans
-  function buildBarTicks(bars,tickEl,ticks,min,max){
-    // ticks rendered as part of bar via ::before? Simplified: just do Points row
-  }
-  buildRow('ptsNihss',0,35,PTS_NIHSS,35/16);
-  buildRow('ptsNlr',0.5,30,PTS_NLR,29.5/16);
-  buildRow('ptsSex',0,1,PTS_FEMALE,1/4);
-  // Summary tick labels rendered inline
-  ['sumPtsTicks','sumLpTicks','sumProbTicks'].forEach(id=>{
-    if(!document.getElementById(id))return;
-  });
-})();
-
-function updateAll(){
+function calculate(){
   const r=compute(),pp=r.prob*100;
-  nlrVal.textContent=r.nlr.toFixed(1);nihssVal.textContent=r.nihss;
-  [nlrIn,nihssIn].forEach(updateSlider);
+  resultCard.classList.add('show');
   gaugeMarker.style.left=Math.max(2,Math.min(98,pp))+'%';
+
+  const prev=riskValue.textContent==='—'?0:parseFloat(riskValue.textContent);
+  animateValue(riskValue,prev,pp,700,v=>v.toFixed(1)+'%');
+
   let color,cat;if(pp<10){color='var(--green)';cat='Low Risk';}else if(pp<25){color='var(--orange)';cat='Moderate Risk';}else if(pp<40){color='var(--red)';cat='Elevated Risk';}else{color='var(--black)';cat='High Risk';}
-  riskValue.textContent=pp.toFixed(1)+'%';riskValue.style.color=color;riskCat.textContent=cat;riskCat.style.color=color;
+  setTimeout(()=>{riskValue.style.color=color;riskCat.textContent=cat;riskCat.style.color=color;},100);
+
   statPoints.textContent=Math.round(r.totalPts);statLP.textContent=r.lp.toFixed(2);statOR.textContent=Math.exp(r.lp).toFixed(2);
-
-  // Move markers
-  document.getElementById('dotNihss').style.left=xPos(0,35,r.nihss);
-  document.getElementById('valNihss').style.left=xPos(0,35,r.nihss);
-  document.getElementById('valNihss').textContent=r.nihss;
-  document.getElementById('dotNlr').style.left=xPos(0.5,30,r.nlr);
-  document.getElementById('valNlr').style.left=xPos(0.5,30,r.nlr);
-  document.getElementById('valNlr').textContent=r.nlr.toFixed(1);
-  document.getElementById('dotSex').style.left=xPos(0,1,r.sex);
-  document.getElementById('valSex').style.left=xPos(0,1,r.sex);
-  document.getElementById('valSex').textContent=r.sex?'Female':'Male';
-
-  const ptsC=Math.max(0,Math.min(100,r.totalPts));
-  document.getElementById('dotPts').style.left=xPosPct(ptsC);
-  const lpRel=Math.max(0,Math.min(100,(r.lp+4)/9*100));
-  document.getElementById('dotLP').style.left=xPosPct(lpRel);
-  document.getElementById('dotProb').style.left=xPosPct(lpRel);
 }
 
-nlrIn.addEventListener('input',()=>{nlrVal.textContent=parseFloat(nlrIn.value).toFixed(1);updateAll();});
-nihssIn.addEventListener('input',()=>{nihssVal.textContent=nihssIn.value;updateAll();});
+nlrIn.addEventListener('input',()=>{nlrVal.textContent=parseFloat(nlrIn.value).toFixed(1);updateSlider(nlrIn);});
+nihssIn.addEventListener('input',()=>{nihssVal.textContent=nihssIn.value;updateSlider(nihssIn);});
 [nlrIn,nihssIn].forEach(updateSlider);
-updateAll();
 </script>
 </body>
 </html>
