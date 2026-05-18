@@ -6,9 +6,10 @@
 <title>Dynamic Nomogram — NVAF-Related CES Outcome Prediction</title>
 <style>
 :root {
-  --bg-start: #FBFBFD; --bg-end: #F5F5F7; --text: #1D1D1F; --secondary: #86868B;
-  --tertiary: #AEAEB2; --blue: #0071E3; --green: #34C759; --orange: #FF9500;
-  --red: #FF3B30; --black: #1D1D1F; --card-bg: rgba(255,255,255,0.85); --border: #E5E5EA;
+  --bg-start: #FBFBFD; --bg-end: #F5F5F7; --text: #1D1D1F;
+  --secondary: #86868B; --tertiary: #AEAEB2; --blue: #0071E3;
+  --green: #34C759; --orange: #FF9500; --red: #FF3B30; --black: #1D1D1F;
+  --card-bg: rgba(255,255,255,0.85); --border: #E5E5EA; --stat-bg: #FBFBFD;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: 'Times New Roman', Times, Georgia, serif; background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
@@ -32,45 +33,53 @@ body { font-family: 'Times New Roman', Times, Georgia, serif; background: linear
 
 .card h2 { font-size: 1.3rem; font-weight: 600; color: var(--text); margin-bottom: 20px;
   padding-bottom: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
-.card h2 .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.card h2 .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .dot-blue { background: var(--blue); } .dot-green { background: var(--green); }
 
 .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
 @media (max-width: 720px) { .form-grid { grid-template-columns: 1fr; } }
 
+.field { min-width: 0; }
 .field label { display: flex; justify-content: space-between; align-items: baseline;
   font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
 .field label .val { font-size: 1.1rem; color: var(--blue); font-weight: 700; }
-.field label .unit { font-size: 0.78rem; color: var(--tertiary); font-weight: 400; }
+.field .unit { font-size: 0.78rem; color: var(--tertiary); font-weight: 400; }
 
-/* === FIXED: Segmented Control with JS-driven active state === */
-.segmented { display: flex; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.segmented .seg-btn { flex: 1; text-align: center; padding: 12px 0; cursor: pointer;
-  font-size: 0.95rem; font-weight: 500; color: var(--secondary); background: transparent;
-  transition: all 0.2s; border: none; font-family: inherit;
-  border-right: 1px solid var(--border); }
-.segmented .seg-btn:last-child { border-right: none; }
-.segmented .seg-btn:hover { background: rgba(0,113,227,0.04); }
-.segmented .seg-btn.active { background: var(--blue); color: #fff; font-weight: 600; }
-
-/* === Sliders === */
 input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px;
   background: linear-gradient(90deg, var(--blue) var(--fill,0%), var(--border) var(--fill,0%)); outline: none; }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px;
   border-radius: 50%; background: #fff; border: 2px solid var(--blue); cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,113,227,0.2); transition: transform 0.15s; }
 input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
 .range-labels { display: flex; justify-content: space-between; font-size: 0.7rem;
   color: var(--tertiary); margin-top: 2px; }
 
-/* === Result === */
+.segmented { display: flex; border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; }
+.segmented label { flex: 1; text-align: center; padding: 12px 0; cursor: pointer;
+  font-size: 0.95rem; font-weight: 500; color: var(--secondary); background: transparent;
+  transition: all 0.2s; border-right: 1px solid var(--border); }
+.segmented label:last-child { border-right: none; }
+.segmented label:hover { background: rgba(0,113,227,0.04); }
+.segmented input { display: none; }
+.segmented input:checked + span { color: #fff; }
+.segmented label:has(input:checked) { background: var(--blue); color: #fff; font-weight: 600; }
+.segmented label:has(input:checked) span { color: #fff; }
+
+/* Nomogram canvas */
+.nomogram-wrap { width: 100%; overflow-x: auto; }
+canvas { display: block; margin: 0 auto; max-width: 100%; }
+
+/* Result gauge */
 .result-section { display: none; }
 .result-section.show { display: block; animation: resultPop 0.5s ease-out; }
 @keyframes resultPop { from { opacity:0; transform:scale(0.96); } to { opacity:1; transform:scale(1); } }
 
 .gauge-wrap { position: relative; width: 100%; margin: 16px 0 24px; }
 .gauge-bar { width: 100%; height: 22px; border-radius: 11px;
-  background: linear-gradient(90deg, var(--green) 0%, var(--orange) 35%, var(--red) 70%, var(--black) 100%); }
+  background: linear-gradient(90deg, var(--green) 0%, var(--orange) 35%, var(--red) 70%, var(--black) 100%);
+  position: relative; }
 .gauge-marker { position: absolute; top: -6px; width: 6px; height: 34px; border-radius: 3px;
   background: var(--black); transform: translateX(-50%); transition: left 0.6s cubic-bezier(0.25,0.1,0.25,1); }
 .gauge-labels { display: flex; justify-content: space-between; font-size: 0.75rem;
@@ -83,26 +92,21 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
 @media (max-width: 600px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
-.stat-box { background: #FBFBFD; border-radius: 14px; padding: 14px 10px;
-  text-align: center; border: 1px solid #F0F0F5; }
+.stat-box { background: var(--stat-bg); border-radius: 14px; padding: 14px 10px;
+  text-align: center; border: 1px solid var(--border); }
 .stat-box .num { font-size: 1.4rem; font-weight: 700; color: var(--text); }
 .stat-box .lbl { font-size: 0.7rem; color: var(--tertiary); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
 
 .btn-row { text-align: center; margin-top: 16px; }
 .btn { display: inline-block; padding: 14px 48px; border-radius: 30px; font-size: 1.05rem;
-  font-weight: 600; cursor: pointer; border: none; font-family: inherit;
+  font-weight: 600; cursor: pointer; border: none; font-family: inherit; letter-spacing: 0.01em;
   background: var(--blue); color: #fff; box-shadow: 0 4px 16px rgba(0,113,227,0.25);
   transition: all 0.2s; }
 .btn:hover { box-shadow: 0 6px 24px rgba(0,113,227,0.35); transform: translateY(-1px); }
 .btn:active { transform: scale(0.97); }
 
-/* === FIXED: Nomogram canvas crisp on HiDPI === */
-.nomogram-wrap { width: 100%; }
-.nomogram-wrap canvas { display: block; width: 100%; height: auto; max-width: 900px; margin: 0 auto; }
-
 .info-bar { background: rgba(0,113,227,0.05); border-radius: 14px; padding: 16px 20px;
-  font-size: 0.82rem; color: var(--secondary); margin-top: 20px; text-align: center;
-  border: 1px solid rgba(0,113,227,0.1); }
+  font-size: 0.82rem; color: var(--secondary); margin-top: 20px; text-align: center; border: 1px solid rgba(0,113,227,0.1); }
 
 footer { text-align: center; padding: 24px 20px 40px; font-size: 0.75rem;
   color: var(--tertiary); max-width: 1000px; margin: 0 auto; }
@@ -126,9 +130,9 @@ footer a { color: var(--blue); text-decoration: none; }
     <div class="form-grid">
       <div class="field">
         <label>Sex</label>
-        <div class="segmented" id="sexGroup">
-          <button class="seg-btn active" data-val="0" onclick="setSex(0,this)">Male</button>
-          <button class="seg-btn" data-val="1" onclick="setSex(1,this)">Female</button>
+        <div class="segmented">
+          <label><input type="radio" name="sex" value="0" checked><span>Male</span></label>
+          <label><input type="radio" name="sex" value="1"><span>Female</span></label>
         </div>
       </div>
       <div class="field">
@@ -143,12 +147,12 @@ footer a { color: var(--blue); text-decoration: none; }
       </div>
     </div>
     <div class="btn-row">
-      <button class="btn" onclick="displayResult(compute())">Calculate Risk</button>
+      <button class="btn" id="calcBtn">Calculate Risk</button>
     </div>
   </div>
 
   <!-- RESULT CARD -->
-  <div class="card anim-2 result-section show" id="resultCard">
+  <div class="card anim-2 result-section" id="resultCard">
     <h2><span class="dot dot-green"></span> Predicted Outcome</h2>
     <div class="gauge-wrap">
       <div class="gauge-bar"></div>
@@ -177,42 +181,42 @@ footer a { color: var(--blue); text-decoration: none; }
       <canvas id="nomogram" width="900" height="620"></canvas>
     </div>
   </div>
+
+  <div class="info-bar">
+    <strong>Model:</strong> logit(P) = −2.7865 + 0.0843 × NIHSS + 0.2461 × NLR + 0.8277 × Female &ensp;|&ensp;
+    <strong>N = 196</strong> (109 Female, 55.6%) &ensp;|&ensp;
+    <strong>Risk:</strong> &lt;10% Low · 10–25% Moderate · 25–40% Elevated · &gt;40% High &ensp;|&ensp;
+    Hosmer-Lemeshow P &gt; 0.05 · Decision curve analysis validated
+  </div>
 </div>
 
 <footer>
-  Reference: Hu J, Wang L, Chen XY, He X, Wu JC. Nomogram for predicting short-term outcome in NVAF-related acute CES.
+  Reference: Hu J, Wang L, Chen XY, He X, Wu JC. Nomogram for predicting short-term outcome in patients with acute cardioembolic stroke due to nonvalvular atrial fibrillation.
   <em>Int J Cerebrovasc Dis</em> 2024; 32(10). DOI: 10.3760/cma.j.issn.1673-4165.2024.10.002 &ensp;|&ensp;
-  Research use only. Not medical advice.
+  This tool is for research purposes only. Not medical advice.
 </footer>
 
 <script>
-// === Published model (Hu et al., IJCVD 2024) ===
+// === Published model coefficients (Hu et al., IJCVD 2024) ===
 const B0 = -2.7865;
-const B_NLR  = 0.246079;  // ln(1.279)
-const B_NIHSS = 0.084341; // ln(1.088)
-const B_FEMALE = 0.827678; // ln(2.288)
+const B_NLR = Math.log(1.279);    // 0.2461
+const B_NIHSS = Math.log(1.088);  // 0.0843
+const B_FEMALE = Math.log(2.288); // 0.8277
 
-// Nomogram point scaling (100-point system)
+// Nomogram scaling
+const MAX_PTS = 100;
 const SCALE_NLR = 30, SCALE_NIHSS = 35;
-const TOTAL_BETA = B_NLR*SCALE_NLR + B_NIHSS*SCALE_NIHSS + B_FEMALE;
-const PTS_NLR   = 100 * B_NLR   / TOTAL_BETA;
-const PTS_NIHSS = 100 * B_NIHSS / TOTAL_BETA;
-const PTS_FEMALE = 100 * B_FEMALE / TOTAL_BETA;
+const TOTAL_BETA = B_NLR * SCALE_NLR + B_NIHSS * SCALE_NIHSS + B_FEMALE;
+const PTS_NLR = MAX_PTS * B_NLR / TOTAL_BETA;
+const PTS_NIHSS = MAX_PTS * B_NIHSS / TOTAL_BETA;
+const PTS_FEMALE = MAX_PTS * B_FEMALE / TOTAL_BETA;
 
-let currentSex = 0;
-
-function setSex(val, btn) {
-  currentSex = val;
-  document.querySelectorAll('#sexGroup .seg-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  displayResult(compute());
-}
-
-// DOM refs
+// DOM
 const nlrIn = document.getElementById('nlrIn');
 const nihssIn = document.getElementById('nihssIn');
 const nlrVal = document.getElementById('nlrVal');
 const nihssVal = document.getElementById('nihssVal');
+const calcBtn = document.getElementById('calcBtn');
 const resultCard = document.getElementById('resultCard');
 const riskValue = document.getElementById('riskValue');
 const riskCat = document.getElementById('riskCat');
@@ -223,44 +227,58 @@ const statOR = document.getElementById('statOR');
 const canvas = document.getElementById('nomogram');
 const ctx = canvas.getContext('2d');
 
-function updateSlider(s) {
-  const min = +s.min, max = +s.max, val = +s.value;
-  s.style.setProperty('--fill', ((val-min)/(max-min)*100)+'%');
+// Slider fill
+function updateSlider(slider) {
+  const min = parseFloat(slider.min), max = parseFloat(slider.max), val = parseFloat(slider.value);
+  slider.style.setProperty('--fill', ((val - min) / (max - min) * 100) + '%');
+}
+
+function getSex() {
+  return document.querySelector('input[name="sex"]:checked').value === '1' ? 1 : 0;
 }
 
 function compute() {
-  const nlr=+nlrIn.value, nihss=+nihssIn.value, sex=currentSex;
+  const nlr = parseFloat(nlrIn.value), nihss = parseInt(nihssIn.value), sex = getSex();
   const lp = B0 + B_NLR*nlr + B_NIHSS*nihss + B_FEMALE*sex;
-  const prob = 1/(1+Math.exp(-lp));
-  const pts = nlr*PTS_NLR + nihss*PTS_NIHSS + sex*PTS_FEMALE;
-  return {nlr,nihss,sex,lp,prob,totalPts:pts};
+  const prob = 1 / (1 + Math.exp(-lp));
+  const ptsNLR = nlr * PTS_NLR, ptsNIHSS = nihss * PTS_NIHSS, ptsSex = sex * PTS_FEMALE;
+  const totalPts = ptsNLR + ptsNIHSS + ptsSex;
+  return { nlr, nihss, sex, lp, prob, totalPts, ptsNLR, ptsNIHSS, ptsSex };
 }
 
-function animateValue(el, start, end, dur, fmt) {
-  const t0 = performance.now();
+function animateValue(el, start, end, duration, formatter) {
+  const startTime = performance.now();
   function step(ts) {
-    const p = Math.min((ts-t0)/dur, 1);
-    const e = 1-Math.pow(1-p,3);
-    el.textContent = fmt(start + (end-start)*e);
-    if (p<1) requestAnimationFrame(step);
+    const progress = Math.min((ts - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+    el.textContent = formatter(start + (end - start) * eased);
+    if (progress < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
 
 function displayResult(r) {
   resultCard.classList.add('show');
-  const pp = r.prob*100;
-  gaugeMarker.style.left = Math.max(2,Math.min(98,pp))+'%';
+  const probPct = r.prob * 100;
 
-  const prev = riskValue.textContent==='—'?0:parseFloat(riskValue.textContent);
-  animateValue(riskValue, prev, pp, 600, v=>v.toFixed(1)+'%');
+  // Gauge marker (prob 0-100% mapped to 2%-98% on gauge)
+  const gaugePos = Math.max(2, Math.min(98, probPct));
+  gaugeMarker.style.left = gaugePos + '%';
 
-  let color,cat;
-  if (pp<10) { color='var(--green)'; cat='Low Risk'; }
-  else if (pp<25) { color='var(--orange)'; cat='Moderate Risk'; }
-  else if (pp<40) { color='var(--red)'; cat='Elevated Risk'; }
-  else { color='var(--black)'; cat='High Risk'; }
-  riskValue.style.color=color; riskCat.textContent=cat; riskCat.style.color=color;
+  // Animate risk value
+  const prevText = riskValue.textContent;
+  const prevNum = prevText === '—' ? 0 : parseFloat(prevText);
+  animateValue(riskValue, prevNum, probPct, 600, v => v.toFixed(1) + '%');
+
+  // Risk color & category
+  let color, cat;
+  if (probPct < 10) { color = 'var(--green)'; cat = 'Low Risk'; }
+  else if (probPct < 25) { color = 'var(--orange)'; cat = 'Moderate Risk'; }
+  else if (probPct < 40) { color = 'var(--red)'; cat = 'Elevated Risk'; }
+  else { color = 'var(--black)'; cat = 'High Risk'; }
+  riskValue.style.color = color;
+  riskCat.textContent = cat;
+  riskCat.style.color = color;
 
   statPoints.textContent = Math.round(r.totalPts);
   statLP.textContent = r.lp.toFixed(2);
@@ -269,156 +287,150 @@ function displayResult(r) {
   drawNomogram(r);
 }
 
-// === CRISP NOMOGRAM with HiDPI rendering ===
 function drawNomogram(r) {
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  const W = 900, H = 640;
-  canvas.width = W * DPR;
-  canvas.height = H * DPR;
-  canvas.style.width = W + 'px';
-  canvas.style.height = H + 'px';
-  const c = canvas.getContext('2d');
-  c.setTransform(DPR,0,0,DPR,0,0);
-  c.clearRect(0, 0, W, H);
+  const W = 900, H = 620, DPR = 1;
+  canvas.width = W * DPR; canvas.height = H * DPR;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.clearRect(0, 0, W, H);
 
-  const LM=105, RM=55, AXW=W-LM-RM;
-  const FONT = '"Times New Roman", Times, Georgia, serif';
+  const LM = 90, RM = 50, AXW = W - LM - RM;
 
-  // Background grid lines
-  c.strokeStyle = 'rgba(0,0,0,0.03)'; c.lineWidth = 0.5;
-  for (let x = LM; x <= W-RM; x += 20) { c.beginPath(); c.moveTo(x, 20); c.lineTo(x, 600); c.stroke(); }
-
-  // Variable axes
+  // Axes definition
   const axes = [
-    { y:70,  label:'Baseline NIHSS',  min:0,   max:35, val:r.nihss, ppu:PTS_NIHSS,
-      ticks:[0,5,10,15,20,25,30,35] },
-    { y:170, label:'NLR',             min:0.5, max:30, val:r.nlr,   ppu:PTS_NLR,
-      ticks:[0.5,2,4,6,8,10,14,20,30] },
-    { y:265, label:'Sex',             min:0,   max:1,  val:r.sex,   ppu:PTS_FEMALE,
-      ticks:[0,1], tlabels:['Male','Female'] },
+    { y: 55, label: 'Baseline NIHSS', min: 0, max: 35, val: r.nihss, ppu: PTS_NIHSS,
+      ticks: [0,5,10,15,20,25,30,35] },
+    { y: 140, label: 'NLR', min: 0.5, max: 30, val: r.nlr, ppu: PTS_NLR,
+      ticks: [0.5,2,4,6,8,10,14,20,30] },
+    { y: 225, label: 'Sex', min: 0, max: 1, val: r.sex, ppu: PTS_FEMALE,
+      ticks: [0,1], tickLabels: ['Male','Female'] },
   ];
 
+  // Draw each variable axis
   axes.forEach(ax => {
     const y = ax.y;
-    // Main line
-    c.strokeStyle = '#1D1D1F'; c.lineWidth = 2.5;
-    c.beginPath(); c.moveTo(LM, y); c.lineTo(W-RM, y); c.stroke();
+    // Line
+    ctx.strokeStyle = '#1D1D1F'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(LM, y); ctx.lineTo(W - RM, y); ctx.stroke();
     // Label
-    c.fillStyle = '#1D1D1F'; c.font = '600 16px '+FONT;
-    c.fillText(ax.label, 6, y+7);
-    // Point scale (top)
-    c.fillStyle = '#AEAEB2'; c.font = '11px '+FONT; c.textAlign = 'center';
-    for (let v=ax.min; v<=ax.max; v+=(ax.max-ax.min)/20) {
-      const x = LM + (v-ax.min)/(ax.max-ax.min)*AXW;
-      if (Math.abs(Math.round(v)-v)<0.01)
-        c.fillText(Math.round(v*ax.ppu), x, y-20);
+    ctx.fillStyle = '#1D1D1F'; ctx.font = '600 15px "Times New Roman", Times, serif';
+    ctx.fillText(ax.label, 8, y + 6);
+    // Points scale on top
+    ctx.fillStyle = '#AEAEB2'; ctx.font = '10px "Times New Roman", Times, serif';
+    ctx.textAlign = 'center';
+    for (let v = ax.min; v <= ax.max; v += (ax.max - ax.min) / 20) {
+      const x = LM + (v - ax.min) / (ax.max - ax.min) * AXW;
+      const pts = Math.round(v * ax.ppu);
+      if (Math.abs(Math.round(v) - v) < 0.01) ctx.fillText(pts, x, y - 16);
     }
-    c.textAlign = 'start';
-    // Tick marks and labels
-    const tlabels = ax.tlabels || ax.ticks.map(String);
-    ax.ticks.forEach((t,i) => {
-      const x = LM + (t-ax.min)/(ax.max-ax.min)*AXW;
-      c.strokeStyle = '#86868B'; c.lineWidth = 1;
-      c.beginPath(); c.moveTo(x, y-12); c.lineTo(x, y+12); c.stroke();
-      c.fillStyle = '#555'; c.font = '13px '+FONT; c.textAlign = 'center';
-      c.fillText(tlabels[i], x, y+30);
+    ctx.textAlign = 'start';
+    // Ticks + labels
+    const labels = ax.tickLabels || ax.ticks.map(String);
+    ax.ticks.forEach((t, i) => {
+      const x = LM + (t - ax.min) / (ax.max - ax.min) * AXW;
+      ctx.strokeStyle = '#86868B'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, y - 10); ctx.lineTo(x, y + 10); ctx.stroke();
+      ctx.fillStyle = '#86868B'; ctx.font = '12px "Times New Roman", Times, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(labels[i], x, y + 26);
     });
-    c.textAlign = 'start';
-    // Red current-value dot
-    const vx = LM + (ax.val-ax.min)/(ax.max-ax.min)*AXW;
-    c.fillStyle = '#FF3B30'; c.beginPath(); c.arc(vx, y, 10, 0, Math.PI*2); c.fill();
-    c.fillStyle = '#fff'; c.font = 'bold 12px '+FONT; c.textAlign = 'center';
-    const vt = ax.val===Math.round(ax.val) ? ax.val : ax.val.toFixed(1);
-    c.fillText(vt, vx, y+5); c.textAlign = 'start';
+    ctx.textAlign = 'start';
+    // Current value marker
+    const vx = LM + (ax.val - ax.min) / (ax.max - ax.min) * AXW;
+    ctx.fillStyle = '#FF3B30';
+    ctx.beginPath(); ctx.arc(vx, y, 8, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 11px "Times New Roman", Times, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(typeof ax.val === 'number' && ax.val < 100 ? ax.val.toFixed(1) : ax.val, vx, y + 4);
+    ctx.textAlign = 'start';
   });
 
-  // ---- Total Points ----
-  const ptsY=355;
-  c.strokeStyle='#0071E3'; c.lineWidth=4;
-  c.beginPath(); c.moveTo(LM,ptsY); c.lineTo(W-RM,ptsY); c.stroke();
-  c.fillStyle='#0071E3'; c.font='600 16px '+FONT;
-  c.fillText('Total Points',6,ptsY+8);
-  for (let p=0; p<=100; p+=10) {
-    const x=LM+(p/100)*AXW;
-    c.strokeStyle='#0071E3'; c.lineWidth=1;
-    c.beginPath(); c.moveTo(x,ptsY-12); c.lineTo(x,ptsY+12); c.stroke();
-    c.fillStyle='#0071E3'; c.font='12px '+FONT; c.textAlign='center';
-    c.fillText(p,x,ptsY+28);
+  // Total Points
+  const ptsY = 310;
+  ctx.strokeStyle = '#0071E3'; ctx.lineWidth = 3.5;
+  ctx.beginPath(); ctx.moveTo(LM, ptsY); ctx.lineTo(W - RM, ptsY); ctx.stroke();
+  ctx.fillStyle = '#0071E3'; ctx.font = '600 15px "Times New Roman", Times, serif';
+  ctx.fillText('Total Points', 8, ptsY + 6);
+  for (let p = 0; p <= 100; p += 10) {
+    const x = LM + (p / 100) * AXW;
+    ctx.strokeStyle = '#0071E3'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, ptsY - 10); ctx.lineTo(x, ptsY + 10); ctx.stroke();
+    ctx.fillStyle = '#0071E3'; ctx.font = '11px "Times New Roman", Times, serif';
+    ctx.textAlign = 'center'; ctx.fillText(p, x, ptsY + 26);
   }
-  c.textAlign='start';
-  const ptsClamped = Math.max(0,Math.min(100,r.totalPts));
-  const ptsX = LM+(ptsClamped/100)*AXW;
-  c.fillStyle='#FF3B30'; c.beginPath(); c.arc(ptsX,ptsY,11,0,Math.PI*2); c.fill();
-  c.fillStyle='#fff'; c.font='bold 12px '+FONT; c.textAlign='center';
-  c.fillText(Math.round(r.totalPts),ptsX,ptsY+5); c.textAlign='start';
+  ctx.textAlign = 'start';
 
-  // ---- Linear Predictor ----
-  const lpY=445, lpMin=-4, lpMax=5;
-  c.strokeStyle='#0071E3'; c.lineWidth=3;
-  c.beginPath(); c.moveTo(LM,lpY); c.lineTo(W-RM,lpY); c.stroke();
-  c.fillStyle='#0071E3'; c.font='600 15px '+FONT;
-  c.fillText('Linear Predictor',6,lpY+6);
-  for (let v=lpMin; v<=lpMax; v+=0.5) {
-    const x=LM+(v-lpMin)/(lpMax-lpMin)*AXW;
-    c.strokeStyle='#0071E3'; c.lineWidth=0.5;
-    c.beginPath(); c.moveTo(x,lpY-8); c.lineTo(x,lpY+8); c.stroke();
-    c.fillStyle='#0071E3'; c.font='11px '+FONT; c.textAlign='center';
-    c.fillText(v.toFixed(1),x,lpY+24);
+  // Marker on points
+  const ptsClamped = Math.max(0, Math.min(100, r.totalPts));
+  const ptsX = LM + (ptsClamped / 100) * AXW;
+  ctx.fillStyle = '#FF3B30';
+  ctx.beginPath(); ctx.arc(ptsX, ptsY, 9, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 11px "Times New Roman", Times, serif';
+  ctx.textAlign = 'center'; ctx.fillText(Math.round(r.totalPts), ptsX, ptsY + 4);
+  ctx.textAlign = 'start';
+
+  // Linear Predictor
+  const lpY = 390, lpMin = -4, lpMax = 5;
+  ctx.strokeStyle = '#0071E3'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(LM, lpY); ctx.lineTo(W - RM, lpY); ctx.stroke();
+  ctx.fillStyle = '#0071E3'; ctx.font = '600 14px "Times New Roman", Times, serif';
+  ctx.fillText('Linear Predictor', 8, lpY + 5);
+  for (let v = lpMin; v <= lpMax; v += 0.5) {
+    const x = LM + (v - lpMin) / (lpMax - lpMin) * AXW;
+    ctx.strokeStyle = '#0071E3'; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(x, lpY - 8); ctx.lineTo(x, lpY + 8); ctx.stroke();
+    ctx.fillStyle = '#0071E3'; ctx.font = '10px "Times New Roman", Times, serif';
+    ctx.textAlign = 'center'; ctx.fillText(v.toFixed(1), x, lpY + 24);
   }
-  c.textAlign='start';
+  ctx.textAlign = 'start';
+  const lpClamped = Math.max(lpMin, Math.min(lpMax, r.lp));
+  const lpX = LM + (lpClamped - lpMin) / (lpMax - lpMin) * AXW;
+  ctx.fillStyle = '#FF3B30';
+  ctx.beginPath(); ctx.arc(lpX, lpY, 9, 0, Math.PI*2); ctx.fill();
 
-  // ---- Probability ----
-  const prY=525;
-  c.strokeStyle='#1D1D1F'; c.lineWidth=4;
-  c.beginPath(); c.moveTo(LM,prY); c.lineTo(W-RM,prY); c.stroke();
-  c.fillStyle='#1D1D1F'; c.font='600 15px '+FONT;
-  c.fillText('Predicted Probability',6,prY+6);
-  [0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.95].forEach(p=>{
-    const lpV=Math.log(p/(1-p)), x=LM+(lpV-lpMin)/(lpMax-lpMin)*AXW;
-    if (x>=LM&&x<=W-RM) {
-      c.strokeStyle='#1D1D1F'; c.lineWidth=0.5;
-      c.beginPath(); c.moveTo(x,prY-10); c.lineTo(x,prY+10); c.stroke();
-      c.fillStyle='#1D1D1F'; c.font='11px '+FONT; c.textAlign='center';
-      c.fillText(Math.round(p*100)+'%',x,prY+26);
+  // Probability axis
+  const prY = 465;
+  ctx.strokeStyle = '#1D1D1F'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(LM, prY); ctx.lineTo(W - RM, prY); ctx.stroke();
+  ctx.fillStyle = '#1D1D1F'; ctx.font = '600 14px "Times New Roman", Times, serif';
+  ctx.fillText('Predicted Probability', 8, prY + 5);
+  const probs = [0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9];
+  probs.forEach(p => {
+    const lpV = Math.log(p/(1-p));
+    const x = LM + (lpV - lpMin) / (lpMax - lpMin) * AXW;
+    if (x >= LM && x <= W - RM) {
+      ctx.strokeStyle = '#1D1D1F'; ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(x, prY - 8); ctx.lineTo(x, prY + 8); ctx.stroke();
+      ctx.fillStyle = '#1D1D1F'; ctx.font = '10px "Times New Roman", Times, serif';
+      ctx.textAlign = 'center'; ctx.fillText(Math.round(p*100)+'%', x, prY + 24);
     }
   });
-  c.textAlign='start';
+  ctx.textAlign = 'start';
+  const prX = LM + (lpClamped - lpMin) / (lpMax - lpMin) * AXW;
+  ctx.fillStyle = '#FF3B30';
+  ctx.beginPath(); ctx.arc(prX, prY, 9, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 11px "Times New Roman", Times, serif';
+  ctx.textAlign = 'center'; ctx.fillText(Math.round(r.prob*100)+'%', prX, prY + 3);
+  ctx.textAlign = 'start';
 
-  // Red markers on LP and PR axes
-  const lpClamped=Math.max(lpMin,Math.min(lpMax,r.lp));
-  const lpX=LM+(lpClamped-lpMin)/(lpMax-lpMin)*AXW;
-  const prX=lpX;
-  c.fillStyle='#FF3B30';
-  c.beginPath(); c.arc(lpX,lpY,11,0,Math.PI*2); c.fill();
-  c.beginPath(); c.arc(prX,prY,11,0,Math.PI*2); c.fill();
-  c.fillStyle='#fff'; c.font='bold 12px '+FONT; c.textAlign='center';
-  c.fillText(Math.round(r.prob*100)+'%',prX,prY+5);
-  c.textAlign='start';
-
-  // Vertical guide
-  c.setLineDash([4,6]); c.strokeStyle='rgba(255,59,48,0.3)'; c.lineWidth=2;
-  c.beginPath(); c.moveTo(ptsX,axes[0].y); c.lineTo(ptsX,prY); c.stroke();
-  c.setLineDash([]);
-
-  // Title
-  c.fillStyle='#1D1D1F'; c.font='bold 17px '+FONT; c.textAlign='center';
-  c.fillText('Points',(LM+W-RM)/2, 40);
+  // Vertical guide line
+  ctx.setLineDash([3,5]);
+  ctx.strokeStyle = 'rgba(255,59,48,0.3)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(ptsX, axes[0].y); ctx.lineTo(ptsX, prY); ctx.stroke();
+  ctx.setLineDash([]);
 }
 
-// Slider events
-nlrIn.addEventListener('input', ()=>{
-  nlrVal.textContent = parseFloat(nlrIn.value).toFixed(1);
-  updateSlider(nlrIn);
-  displayResult(compute());
-});
-nihssIn.addEventListener('input', ()=>{
-  nihssVal.textContent = nihssIn.value;
-  updateSlider(nihssIn);
-  displayResult(compute());
-});
+function updateSliderFills() {
+  [nlrIn, nihssIn].forEach(updateSlider);
+}
 
-// Init
-[nlrIn,nihssIn].forEach(updateSlider);
+// Event handlers
+nlrIn.addEventListener('input', () => { nlrVal.textContent = parseFloat(nlrIn.value).toFixed(1); updateSlider(nlrIn); });
+nihssIn.addEventListener('input', () => { nihssVal.textContent = nihssIn.value; updateSlider(nihssIn); });
+calcBtn.addEventListener('click', () => displayResult(compute()));
+document.querySelectorAll('input[name="sex"]').forEach(r => r.addEventListener('change', () => displayResult(compute())));
+
+// Initial state
+updateSliderFills();
 displayResult(compute());
 </script>
 </body>
