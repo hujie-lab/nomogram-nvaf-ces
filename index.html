@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>NVAF-CES Outcome Prediction</title>
 <style>
-:root{--text:#1D1D1F;--s:#86868B;--t:#AEAEB2;--blue:#0071E3;--green:#34C759;--orange:#FF9500;--red:#FF3B30;--black:#1D1D1F;--card:rgba(255,255,255,0.85);--border:#E5E5EA}
+:root{--text:#1D1D1F;--s:#86868B;--t:#AEAEB2;--blue:#0071E3;--green:#34C759;--orange:#FF9500;--red:#FF3B30;--card:rgba(255,255,255,0.85);--border:#E5E5EA}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Times New Roman',Times,Georgia,serif;background:linear-gradient(180deg,#FBFBFD 0%,#F5F5F7 100%);color:var(--text);-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;min-height:100vh}
 .container{width:640px;max-width:98vw;padding:20px 10px}
@@ -33,16 +33,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .result-section{display:none}
 .result-section.show{display:block;animation:pop .4s ease-out}
 @keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
-.gauge-wrap{position:relative;width:100%;margin:8px 0 14px}
-.gauge-bar{width:100%;height:16px;border-radius:8px;background:#E5E5EA}
-.gauge-marker{position:absolute;top:-5px;width:4px;height:26px;border-radius:2px;background:var(--black);transform:translateX(-50%);transition:left .6s cubic-bezier(.25,.1,.25,1)}
+.gauge-wrap{display:flex;justify-content:center;align-items:center;padding:4px 0 8px}
+.gauge-ring{transform:rotate(-90deg)}
+.gauge-ring .bg{fill:none;stroke:#E5E5EA;stroke-width:10}
+.gauge-ring .fill{fill:none;stroke:var(--blue);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .7s cubic-bezier(.25,.1,.25,1),stroke .5s}
 .risk-display{text-align:center}
-.risk-value{font-size:2.4rem;font-weight:800;letter-spacing:-.02em;transition:color .5s;line-height:1.1}
-.risk-category{font-size:.85rem;font-weight:600;margin-top:1px}
+.risk-value{font-size:3rem;font-weight:800;letter-spacing:-.02em;color:var(--text);line-height:1.1}
 .risk-detail{font-size:.68rem;color:var(--s);margin-top:2px}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
 .stat-box{background:#FBFBFD;border-radius:8px;padding:8px 4px;text-align:center;border:1px solid #F0F0F5}
-.stat-box .num{font-size:1rem;font-weight:700}
+.stat-box .num{font-size:1rem;font-weight:700;color:var(--text)}
 .stat-box .lbl{font-size:.55rem;color:var(--t);margin-top:1px;text-transform:uppercase;letter-spacing:.03em}
 .btn-row{text-align:center;margin-top:10px}
 .btn{padding:12px 40px;border-radius:26px;font-size:.9rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;background:var(--blue);color:#fff;box-shadow:0 3px 14px rgba(0,113,227,.22);transition:all .2s}
@@ -80,17 +80,21 @@ footer{text-align:center;padding:4px 10px 16px;font-size:.6rem;color:var(--t)}
 
 <div class="card result-section" id="resultCard">
   <h2><span class="dot dot-green"></span> Predicted Outcome</h2>
-  <div class="gauge-wrap"><div class="gauge-bar"></div><div class="gauge-marker" id="gaugeMarker" style="left:50%"></div></div>
+  <div class="gauge-wrap">
+    <svg class="gauge-ring" width="140" height="140" viewBox="0 0 140 140">
+      <circle class="bg" cx="70" cy="70" r="58"/>
+      <circle class="fill" id="gaugeFill" cx="70" cy="70" r="58"/>
+    </svg>
+  </div>
   <div class="risk-display"><div class="risk-value" id="riskValue">—</div>
-    <div class="risk-category" id="riskCat"></div>
-    <div class="risk-detail">Poor functional outcome (mRS &gt; 2 at Day 14)</div></div>
+    <div class="risk-detail">Probability of poor functional outcome (mRS &gt; 2 at Day 14)</div></div>
   <div class="stats-row"><div class="stat-box"><div class="num" id="statPoints">—</div><div class="lbl">Points</div></div>
-    <div class="stat-box"><div class="num" id="statLP">—</div><div class="lbl">Lin.Pred.</div></div>
+    <div class="stat-box"><div class="num" id="statLP">—</div><div class="lbl">Linear Predictor</div></div>
     <div class="stat-box"><div class="num" id="statOR">—</div><div class="lbl">Odds Ratio</div></div>
     <div class="stat-box"><div class="num">0.820</div><div class="lbl">C-Statistic</div></div></div>
 </div>
 
-<div class="info-bar">logit(P)=−2.79+0.084·NIHSS+0.246·NLR+0.828·Female &ensp;|&ensp; Risk thresholds based on DCA: &lt;10% Low · 10–33% Moderate · &gt;33% High &ensp;|&ensp; C-statistic 0.820 · N=196</div>
+<div class="info-bar">logit(P)=−2.79+0.084·NIHSS+0.246·NLR+0.828·Female &ensp;|&ensp; N=196 · C-statistic 0.820 · Bootstrap validated</div>
 <footer>Hu J et al. <em>Int J Cerebrovasc Dis</em> 2024;32(10). Research use only.</footer>
 </div>
 
@@ -98,25 +102,34 @@ footer{text-align:center;padding:4px 10px 16px;font-size:.6rem;color:var(--t)}
 const B0=-2.7865,B_NLR=0.246079,B_NIHSS=0.084341,B_FEMALE=0.827678;
 const SCALE_NLR=30,SCALE_NIHSS=35,TOTAL_BETA=B_NLR*SCALE_NLR+B_NIHSS*SCALE_NIHSS+B_FEMALE;
 const PTS_NLR=100*B_NLR/TOTAL_BETA,PTS_NIHSS=100*B_NIHSS/TOTAL_BETA,PTS_FEMALE=100*B_FEMALE/TOTAL_BETA;
+const CIRCUMFERENCE=2*Math.PI*58;
 let currentSex=0;
 function setSex(v,btn){currentSex=v;document.querySelectorAll('#sexGroup .seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 const nlrIn=document.getElementById('nlrIn'),nihssIn=document.getElementById('nihssIn');
 const nlrVal=document.getElementById('nlrVal'),nihssVal=document.getElementById('nihssVal');
 const resultCard=document.getElementById('resultCard');
-const riskValue=document.getElementById('riskValue'),riskCat=document.getElementById('riskCat');
-const gaugeMarker=document.getElementById('gaugeMarker');
+const riskValue=document.getElementById('riskValue');
+const gaugeFill=document.getElementById('gaugeFill');
 const statPoints=document.getElementById('statPoints'),statLP=document.getElementById('statLP'),statOR=document.getElementById('statOR');
 function updateSlider(s){const mn=+s.min,mx=+s.max,v=+s.value;s.style.setProperty('--fill',((v-mn)/(mx-mn)*100)+'%');}
 function compute(){const nlr=+nlrIn.value,nihss=+nihssIn.value,sex=currentSex;const lp=B0+B_NLR*nlr+B_NIHSS*nihss+B_FEMALE*sex,prob=1/(1+Math.exp(-lp));return {nlr,nihss,sex,lp,prob,totalPts:nlr*PTS_NLR+nihss*PTS_NIHSS+sex*PTS_FEMALE};}
 function animateValue(el,start,end,dur,fmt){const t0=performance.now();function step(ts){const p=Math.min((ts-t0)/dur,1),e=1-Math.pow(1-p,3);el.textContent=fmt(start+(end-start)*e);if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
+gaugeFill.style.strokeDasharray=CIRCUMFERENCE;
+gaugeFill.style.strokeDashoffset=CIRCUMFERENCE;
+
 function calculate(){
   const r=compute(),pp=r.prob*100;
   resultCard.classList.add('show');
-  gaugeMarker.style.left=Math.max(2,Math.min(98,pp))+'%';
+  // Ring fill
+  const offset=CIRCUMFERENCE*(1-pp/100);
+  gaugeFill.style.strokeDashoffset=offset;
+  // Color
+  let color;if(pp<10)color='var(--green)';else if(pp<33)color='var(--orange)';else color='var(--red)';
+  gaugeFill.style.stroke=color;
+  // Value
   const prev=riskValue.textContent==='—'?0:parseFloat(riskValue.textContent);
-  animateValue(riskValue,prev,pp,600,v=>v.toFixed(1)+'%');
-  let color,cat;if(pp<10){color='var(--green)';cat='Low Risk';}else if(pp<33){color='var(--orange)';cat='Moderate Risk';}else{color='var(--red)';cat='High Risk';}
-  setTimeout(()=>{riskValue.style.color=color;riskCat.textContent=cat;riskCat.style.color=color;},60);
+  animateValue(riskValue,prev,pp,700,v=>v.toFixed(1)+'%');
+  riskValue.style.color='var(--text)';
   statPoints.textContent=Math.round(r.totalPts);statLP.textContent=r.lp.toFixed(2);statOR.textContent=Math.exp(r.lp).toFixed(2);
 }
 nlrIn.addEventListener('input',()=>{nlrVal.textContent=parseFloat(nlrIn.value).toFixed(1);updateSlider(nlrIn);calculate();});
