@@ -3,53 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache">
 <title>NVAF-CES Outcome Prediction</title>
 <style>
-:root{--bg-start:#FBFBFD;--bg-end:#F5F5F7;--text:#1D1D1F;--s:#86868B;--t:#AEAEB2;--blue:#0071E3;--green:#34C759;--orange:#FF9500;--red:#FF3B30;--black:#1D1D1F;--card:rgba(255,255,255,0.85);--border:#E5E5EA}
+:root{--text:#1D1D1F;--s:#86868B;--t:#AEAEB2;--blue:#0071E3;--green:#34C759;--orange:#FF9500;--red:#FF3B30;--black:#1D1D1F;--card:rgba(255,255,255,0.85);--border:#E5E5EA}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Times New Roman',Times,Georgia,serif;background:linear-gradient(180deg,var(--bg-start) 0%,var(--bg-end) 100%);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center}
-.hero{text-align:center;padding:0 20px 8px}
-.hero h1{font-size:2rem;font-weight:700;letter-spacing:-0.02em}
-.hero p{font-size:.9rem;color:var(--s);margin-top:3px}
-.hero .citation{font-size:.72rem;color:var(--t);margin-top:2px;font-style:italic}
-.container{width:640px;max-width:100%;padding:40px 20px}
-.card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:18px;padding:26px 28px;margin-bottom:14px;border:1px solid rgba(0,0,0,.06);box-shadow:0 2px 24px rgba(0,0,0,.04);animation:cardIn .6s ease-out both}
-@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.card h2{font-size:1.1rem;font-weight:600;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
-.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+body{font-family:'Times New Roman',Times,Georgia,serif;background:linear-gradient(180deg,#FBFBFD 0%,#F5F5F7 100%);color:var(--text);-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.container{width:480px;max-width:96vw;padding:20px 10px}
+.hero{text-align:center;padding:0 10px 4px}
+.hero h1{font-size:1.5rem;font-weight:700;letter-spacing:-0.01em}
+.hero p{font-size:.78rem;color:var(--s);margin-top:1px}
+.hero .citation{font-size:.65rem;color:var(--t);margin-top:1px;font-style:italic}
+.card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:14px;padding:18px 20px;margin-bottom:10px;border:1px solid rgba(0,0,0,.06);box-shadow:0 2px 18px rgba(0,0,0,.04)}
+.card h2{font-size:.95rem;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5px}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .dot-blue{background:var(--blue)}.dot-green{background:var(--green)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
-.field label{display:flex;justify-content:space-between;align-items:baseline;font-size:.85rem;font-weight:600;margin-bottom:5px}
-.field label .val{font-size:1.1rem;color:var(--blue);font-weight:700}
-.segmented{display:flex;border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.segmented .seg-btn{flex:1;text-align:center;padding:10px 0;cursor:pointer;font-size:.9rem;font-weight:500;color:var(--s);background:0 0;border:none;font-family:inherit;border-right:1px solid var(--border);transition:all .2s}
+.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
+.field label{display:flex;justify-content:space-between;align-items:baseline;font-size:.76rem;font-weight:600;margin-bottom:3px}
+.field label .val{font-size:.95rem;color:var(--blue);font-weight:700}
+.segmented{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.segmented .seg-btn{flex:1;text-align:center;padding:8px 0;cursor:pointer;font-size:.8rem;font-weight:500;color:var(--s);background:0 0;border:none;font-family:inherit;border-right:1px solid var(--border);transition:all .2s}
 .segmented .seg-btn:last-child{border-right:none}
 .segmented .seg-btn:hover{background:rgba(0,113,227,.04)}
 .segmented .seg-btn.active{background:var(--blue);color:#fff;font-weight:600}
-input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;background:linear-gradient(90deg,var(--blue) var(--fill,0%),var(--border) var(--fill,0%));outline:0}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--blue);cursor:pointer;box-shadow:0 2px 6px rgba(0,113,227,.2)}
-.range-labels{display:flex;justify-content:space-between;font-size:.65rem;color:var(--t);margin-top:2px}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--blue) var(--fill,0%),var(--border) var(--fill,0%));outline:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--blue);cursor:pointer;box-shadow:0 1px 4px rgba(0,113,227,.2)}
+.range-labels{display:flex;justify-content:space-between;font-size:.6rem;color:var(--t);margin-top:1px}
 .result-section{display:none}
-.result-section.show{display:block;animation:pop .5s ease-out}
-@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-.gauge-wrap{position:relative;width:100%;margin:10px 0 18px}
-.gauge-bar{width:100%;height:20px;border-radius:10px;background:linear-gradient(90deg,var(--green) 0%,var(--orange) 35%,var(--red) 70%,var(--black) 100%)}
-.gauge-marker{position:absolute;top:-6px;width:5px;height:32px;border-radius:2px;background:var(--black);transform:translateX(-50%);transition:left .6s cubic-bezier(.25,.1,.25,1)}
+.result-section.show{display:block;animation:pop .4s ease-out}
+@keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.gauge-wrap{position:relative;width:100%;margin:8px 0 14px}
+.gauge-bar{width:100%;height:16px;border-radius:8px;background:linear-gradient(90deg,var(--green) 0%,var(--orange) 35%,var(--red) 70%,var(--black) 100%)}
+.gauge-marker{position:absolute;top:-5px;width:4px;height:26px;border-radius:2px;background:var(--black);transform:translateX(-50%);transition:left .6s cubic-bezier(.25,.1,.25,1)}
 .risk-display{text-align:center}
-.risk-value{font-size:3rem;font-weight:800;letter-spacing:-.03em;transition:color .5s}
-.risk-category{font-size:.95rem;font-weight:600;margin-top:2px}
-.risk-detail{font-size:.75rem;color:var(--s);margin-top:2px}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
-.stat-box{background:#FBFBFD;border-radius:10px;padding:10px 8px;text-align:center;border:1px solid #F0F0F5}
-.stat-box .num{font-size:1.2rem;font-weight:700}
-.stat-box .lbl{font-size:.6rem;color:var(--t);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
-.btn-row{text-align:center;margin-top:14px}
-.btn{padding:14px 52px;border-radius:30px;font-size:1rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;background:var(--blue);color:#fff;box-shadow:0 4px 18px rgba(0,113,227,.25);transition:all .2s}
-.btn:hover{box-shadow:0 6px 26px rgba(0,113,227,.35);transform:translateY(-1px)}
+.risk-value{font-size:2.4rem;font-weight:800;letter-spacing:-.02em;transition:color .5s;line-height:1.1}
+.risk-category{font-size:.85rem;font-weight:600;margin-top:1px}
+.risk-detail{font-size:.68rem;color:var(--s);margin-top:2px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.stat-box{background:#FBFBFD;border-radius:8px;padding:8px 4px;text-align:center;border:1px solid #F0F0F5}
+.stat-box .num{font-size:1rem;font-weight:700}
+.stat-box .lbl{font-size:.55rem;color:var(--t);margin-top:1px;text-transform:uppercase;letter-spacing:.03em}
+.btn-row{text-align:center;margin-top:10px}
+.btn{padding:12px 40px;border-radius:26px;font-size:.9rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;background:var(--blue);color:#fff;box-shadow:0 3px 14px rgba(0,113,227,.22);transition:all .2s}
+.btn:hover{box-shadow:0 4px 20px rgba(0,113,227,.3);transform:translateY(-1px)}
 .btn:active{transform:scale(.97)}
-.info-bar{background:rgba(0,113,227,.04);border-radius:12px;padding:12px 16px;font-size:.75rem;color:var(--s);text-align:center;border:1px solid rgba(0,113,227,.08)}
-footer{text-align:center;padding:8px 20px 24px;font-size:.65rem;color:var(--t)}
+.info-bar{background:rgba(0,113,227,.04);border-radius:10px;padding:8px 12px;font-size:.68rem;color:var(--s);text-align:center;border:1px solid rgba(0,113,227,.06)}
+footer{text-align:center;padding:4px 10px 16px;font-size:.6rem;color:var(--t)}
 </style>
 </head>
 <body>
@@ -60,7 +60,7 @@ footer{text-align:center;padding:8px 20px 24px;font-size:.65rem;color:var(--t)}
   <p class="citation">Hu J et al. <em>Int J Cerebrovasc Dis</em> 2024;32(10). C-statistic 0.820 · N=196</p>
 </div>
 
-<div class="card" style="animation-delay:.1s">
+<div class="card">
   <h2><span class="dot dot-blue"></span> Patient Parameters</h2>
   <div class="form-grid">
     <div class="field"><label>Sex</label>
@@ -78,20 +78,20 @@ footer{text-align:center;padding:8px 20px 24px;font-size:.65rem;color:var(--t)}
   <div class="btn-row"><button class="btn" onclick="calculate()">Calculate Risk</button></div>
 </div>
 
-<div class="card result-section" id="resultCard" style="animation-delay:.2s">
+<div class="card result-section" id="resultCard">
   <h2><span class="dot dot-green"></span> Predicted Outcome</h2>
   <div class="gauge-wrap"><div class="gauge-bar"></div><div class="gauge-marker" id="gaugeMarker" style="left:50%"></div></div>
   <div class="risk-display"><div class="risk-value" id="riskValue">—</div>
     <div class="risk-category" id="riskCat"></div>
-    <div class="risk-detail">Probability of poor functional outcome (mRS &gt; 2 at Day 14)</div></div>
+    <div class="risk-detail">Poor functional outcome (mRS &gt; 2 at Day 14)</div></div>
   <div class="stats-row"><div class="stat-box"><div class="num" id="statPoints">—</div><div class="lbl">Points</div></div>
-    <div class="stat-box"><div class="num" id="statLP">—</div><div class="lbl">Linear Predictor</div></div>
+    <div class="stat-box"><div class="num" id="statLP">—</div><div class="lbl">Lin.Pred.</div></div>
     <div class="stat-box"><div class="num" id="statOR">—</div><div class="lbl">Odds Ratio</div></div>
     <div class="stat-box"><div class="num">0.820</div><div class="lbl">C-Statistic</div></div></div>
 </div>
 
-<div class="info-bar">logit(P)=−2.79+0.084·NIHSS+0.246·NLR+0.828·Female &ensp;|&ensp; &lt;10% Low · 10–25% Moderate · 25–40% Elevated · &gt;40% High</div>
-<footer>Hu J et al. <em>Int J Cerebrovasc Dis</em> 2024;32(10). · Research use only.</footer>
+<div class="info-bar">logit(P)=−2.79+0.084·NIHSS+0.246·NLR+0.828·Female</div>
+<footer>Hu J et al. <em>Int J Cerebrovasc Dis</em> 2024;32(10). Research use only.</footer>
 </div>
 
 <script>
@@ -114,9 +114,9 @@ function calculate(){
   resultCard.classList.add('show');
   gaugeMarker.style.left=Math.max(2,Math.min(98,pp))+'%';
   const prev=riskValue.textContent==='—'?0:parseFloat(riskValue.textContent);
-  animateValue(riskValue,prev,pp,700,v=>v.toFixed(1)+'%');
+  animateValue(riskValue,prev,pp,600,v=>v.toFixed(1)+'%');
   let color,cat;if(pp<10){color='var(--green)';cat='Low Risk';}else if(pp<25){color='var(--orange)';cat='Moderate Risk';}else if(pp<40){color='var(--red)';cat='Elevated Risk';}else{color='var(--black)';cat='High Risk';}
-  setTimeout(()=>{riskValue.style.color=color;riskCat.textContent=cat;riskCat.style.color=color;},80);
+  setTimeout(()=>{riskValue.style.color=color;riskCat.textContent=cat;riskCat.style.color=color;},60);
   statPoints.textContent=Math.round(r.totalPts);statLP.textContent=r.lp.toFixed(2);statOR.textContent=Math.exp(r.lp).toFixed(2);
 }
 nlrIn.addEventListener('input',()=>{nlrVal.textContent=parseFloat(nlrIn.value).toFixed(1);updateSlider(nlrIn);});
