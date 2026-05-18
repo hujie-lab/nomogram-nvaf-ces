@@ -188,25 +188,30 @@ function drawNomogram(r){
 
   axes.forEach(ax=>{
     const y=ax.y;
+    // Axis line
     c.strokeStyle='#1D1D1F';c.lineWidth=2;c.beginPath();c.moveTo(LM,y);c.lineTo(W-RM,y);c.stroke();
-    c.fillStyle='#1D1D1F';c.font=`600 ${14*fs}px ${FONT}`;c.fillText(ax.label,4,y+5);
-    // Points above
+    // Label ABOVE the axis (well clear)
+    c.fillStyle='#1D1D1F';c.font=`600 ${14*fs}px ${FONT}`;
+    c.fillText(ax.label, LM+4, y-26);
+    // Points scale above axis line
     c.fillStyle='#AEAEB2';c.font=`${9*fs}px ${FONT}`;c.textAlign='center';
     for(let v=ax.min;v<=ax.max;v+=(ax.max-ax.min)/16){
       const x=LM+(v-ax.min)/(ax.max-ax.min)*AXW;
       if(Math.abs(Math.round(v)-v)<0.01) c.fillText(Math.round(v*ax.ppu),x,y-14);
     }
-    // Ticks below
+    // Tick marks centered on axis line, labels BELOW with clear gap
     const tl=ax.tlabels||ax.ticks.map(String);
     ax.ticks.forEach((t,i)=>{
       const x=LM+(t-ax.min)/(ax.max-ax.min)*AXW;
-      c.strokeStyle='#86868B';c.lineWidth=0.8;c.beginPath();c.moveTo(x,y-8);c.lineTo(x,y+8);c.stroke();
-      c.fillStyle='#555';c.font=`${11*fs}px ${FONT}`;c.fillText(tl[i],x,y+22);
+      c.strokeStyle='#86868B';c.lineWidth=0.8;c.beginPath();c.moveTo(x,y-10);c.lineTo(x,y+10);c.stroke();
+      c.fillStyle='#555';c.font=`${11*fs}px ${FONT}`;c.textAlign='center';c.fillText(tl[i],x,y+24);
     });
     c.textAlign='start';
+    // Red dot on axis line, value text ABOVE dot (not overlapping axis)
     const vx=LM+(ax.val-ax.min)/(ax.max-ax.min)*AXW;
     c.fillStyle='#FF3B30';c.beginPath();c.arc(vx,y,7,0,Math.PI*2);c.fill();
-    c.fillStyle='#fff';c.font=`bold ${10*fs}px ${FONT}`;c.textAlign='center';c.fillText(ax.fmt(ax.val),vx,y+4);c.textAlign='start';
+    c.fillStyle='#FF3B30';c.font=`bold ${10*fs}px ${FONT}`;c.textAlign='center';
+    c.fillText(ax.fmt(ax.val),vx,y-18);c.textAlign='start';
   });
 
   // Total Points
